@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04091C">
+<title>IA Tutoriales · Riqueza en Silencio · by Rubén Sbarsky</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2304091C'/%3E%3Cpath d='M32 6c8 6 17 9 22 10v18c0 14-10 23-22 28C20 57 10 48 10 34V16c5-1 14-4 22-10z' fill='none' stroke='%234FE3F7' stroke-width='4'/%3E%3Cpath d='M27 24l14 8-14 8z' fill='%23B57BFF'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/archivo@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/archivo@5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/archivo@5/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/700.css">
+<style>
+/* ═════════ SISTEMA VISUAL «NEÓN IA TUTORIALES» ═════════ */
+:root{
+  --bg:#04091C; --s1:#081231; --s2:#0C1A42; --s3:#14265C;
+  --line:#1E3A78; --line-soft:#14264F;
+  --paper:#EAF4FF; --mut:#A7B8DC; --mut2:#6E80AB;
+  --cyan:#4FE3F7; --cyanHi:#9BF4FF; --blue:#4C8DFF; --violet:#B57BFF;
+  --magenta:#E879F9; --green:#4ADE80; --amber:#FFC24B; --red:#FF5C7A; --gold:#FFD86B; --teal:#2BB8C9;
+  --headerH:108px; --pagerH:66px; --rad:14px;
+  --fd:'Sora',system-ui,sans-serif;
+  --fb:'Archivo',system-ui,-apple-system,sans-serif;
+  --fm:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--paper);font-family:var(--fb);font-size:15.5px;line-height:1.68;overflow-x:hidden;min-height:100vh}
+body.lock{overflow:hidden}
+::selection{background:var(--cyan);color:#04122B}
+::-webkit-scrollbar{width:10px;height:5px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--cyan),var(--violet));border-radius:8px;border:2px solid var(--s1)}
+::-webkit-scrollbar-thumb:hover{background:var(--cyanHi)}
+*{scrollbar-width:thin;scrollbar-color:#2E5FA8 var(--s1)}
+#tabstrip::-webkit-scrollbar{height:4px}
+#tabstrip::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--cyan),var(--violet));border:none}
+
+/* ═════════ FONDO ═════════ */
+#bgGrid{position:fixed;inset:0;z-index:-4;pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(30,58,120,.55), transparent 62%),
+    repeating-linear-gradient(0deg, rgba(79,227,247,.045) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(90deg, rgba(79,227,247,.045) 0 1px, transparent 1px 46px),
+    var(--bg);}
+.glow{position:fixed;z-index:-3;pointer-events:none;border-radius:50%;width:74vmax;height:74vmax}
+#glowA{top:-32vmax;left:-26vmax;background:radial-gradient(closest-side, rgba(79,227,247,.16), transparent 70%);animation:driftA 44s ease-in-out infinite alternate}
+#glowB{bottom:-34vmax;right:-26vmax;background:radial-gradient(closest-side, rgba(181,123,255,.16), transparent 70%);animation:driftB 52s ease-in-out infinite alternate}
+@keyframes driftA{from{transform:translate(0,0)}to{transform:translate(9vmax,7vmax)}}
+@keyframes driftB{from{transform:translate(0,0)}to{transform:translate(-8vmax,-6vmax)}}
+#grain{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");background-size:140px 140px}
+#bgShield{position:fixed;right:-70px;bottom:70px;width:330px;z-index:-2;opacity:.055;pointer-events:none}
+
+/* ═════════ LOGO ═════════ */
+.logoHalo{position:relative;display:grid;place-items:center}
+.logoHalo::before{content:"";position:absolute;width:118%;height:78%;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(79,227,247,.30), rgba(181,123,255,.16) 55%, transparent 72%);
+  animation:halo 5.5s ease-in-out infinite;pointer-events:none}
+@keyframes halo{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.heroLogo{position:relative;width:196px;height:auto;display:block;filter:drop-shadow(0 8px 26px rgba(79,227,247,.22))}
+.brandMark{width:31px;height:35px;flex:none}
+.spark{animation:spark 3.4s ease-in-out infinite}
+.spark:nth-of-type(2){animation-delay:.5s}.spark:nth-of-type(3){animation-delay:1.1s}
+.spark:nth-of-type(4){animation-delay:1.7s}.spark:nth-of-type(5){animation-delay:2.3s}
+@keyframes spark{0%,100%{opacity:.18}45%{opacity:1}}
+.flow{stroke-dasharray:16 300;animation:flow 4.2s linear infinite}
+@keyframes flow{from{stroke-dashoffset:316}to{stroke-dashoffset:0}}
+
+/* ═════════ CABECERA ═════════ */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(4,9,28,.96);border-bottom:1px solid var(--line-soft)}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 13px 6px}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.brandtxt{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brandtxt b{font-family:var(--fd);font-weight:800;font-size:14.5px;letter-spacing:.6px;white-space:nowrap;
+  background:linear-gradient(95deg,var(--cyanHi),var(--cyan) 45%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brandtxt span{font-family:var(--fm);font-size:8px;letter-spacing:1.9px;color:var(--mut2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#btnIndex{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:10px;
+  border:1px solid rgba(79,227,247,.5);background:linear-gradient(180deg,rgba(79,227,247,.14),rgba(181,123,255,.07));
+  color:var(--cyanHi);font-family:var(--fm);font-weight:700;font-size:11px;letter-spacing:1.5px;cursor:pointer;transition:transform .15s,background .2s}
+#btnIndex:active{transform:scale(.95)}
+#btnIndex:hover{background:rgba(79,227,247,.24)}
+.burger{display:flex;flex-direction:column;gap:3px}
+.burger i{display:block;width:15px;height:2px;background:var(--cyanHi);border-radius:2px}
+.burger i:nth-child(2){width:11px}
+#tabstrip{position:relative;display:flex;gap:8px;overflow-x:auto;padding:6px 12px 10px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.tabchip{flex:none;scroll-snap-align:center;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+  border:1px solid var(--line);background:var(--s1);color:var(--mut);font-family:var(--fb);font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap;
+  transition:border-color .2s,color .2s,background .2s,transform .15s}
+.tabchip em{font-style:normal;font-family:var(--fm);font-size:9.5px;color:var(--mut2)}
+.tabchip:hover{border-color:var(--cyan);color:var(--paper)}
+.tabchip:active{transform:scale(.96)}
+.tabchip[aria-selected="true"]{background:linear-gradient(135deg,#7DEFFF,#3B82F6 70%,#8B5CF6);border-color:transparent;color:#04122B;box-shadow:0 4px 18px rgba(79,227,247,.3)}
+.tabchip[aria-selected="true"] em{color:#0d3556}
+#progress{position:absolute;left:0;bottom:-1px;height:2px;width:0%;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet),var(--magenta));transition:width .12s linear;box-shadow:0 0 10px rgba(79,227,247,.6)}
+
+/* ═════════ ÍNDICE ═════════ */
+#scrim{position:fixed;inset:0;z-index:60;background:rgba(2,5,16,.7);opacity:0;pointer-events:none;transition:opacity .3s}
+#scrim.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;z-index:70;width:min(87vw,344px);background:linear-gradient(180deg,var(--s1),#050D22);
+  border-left:1px solid var(--line);transform:translateX(105%);transition:transform .34s cubic-bezier(.22,.9,.3,1);display:flex;flex-direction:column;will-change:transform}
+#drawer.on{transform:translateX(0)}
+.drawerhead{display:flex;align-items:center;gap:10px;padding:14px 14px 12px;border-bottom:1px solid var(--line-soft)}
+.drawerhead .dh{flex:1;min-width:0}
+.drawerhead h2{font-family:var(--fd);font-weight:800;font-size:20px}
+.drawerhead h2 span{color:var(--cyan)}
+.drawerhead p{font-family:var(--fm);font-size:8.5px;letter-spacing:1.8px;color:var(--mut2);margin-top:2px}
+#btnCloseDrawer{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--s2);color:var(--paper);font-size:16px;cursor:pointer;transition:transform .15s,border-color .2s}
+#btnCloseDrawer:hover{border-color:var(--red)}
+#btnCloseDrawer:active{transform:scale(.92)}
+#drawerList{flex:1;overflow-y:auto;padding:6px 0 10px}
+.ditem{display:grid;grid-template-columns:32px 1fr;gap:10px;width:100%;text-align:left;padding:11px 15px;background:none;border:none;
+  border-bottom:1px solid rgba(20,38,79,.7);cursor:pointer;color:var(--paper);border-left:3px solid transparent;transition:background .2s,border-color .2s}
+.ditem:hover{background:var(--s2)}
+.ditem .dnum{font-family:var(--fm);font-size:11px;color:var(--mut2);padding-top:3px}
+.ditem .dname{font-weight:700;font-size:14px;line-height:1.3}
+.ditem .ddesc{display:block;font-size:11.5px;color:var(--mut);line-height:1.4;margin-top:1px}
+.ditem.act{border-left-color:var(--cyan);background:linear-gradient(90deg,rgba(79,227,247,.12),transparent)}
+.ditem.act .dnum{color:var(--cyan)}
+.drawerfoot{display:flex;align-items:center;gap:8px;padding:11px 15px;border-top:1px solid var(--line-soft);font-family:var(--fm);font-size:8.5px;letter-spacing:1.3px;color:var(--mut2)}
+.drawerfoot b{color:var(--cyan)}
+
+/* ═════════ PANELES ═════════ */
+main{padding-top:calc(var(--headerH) + 6px);padding-bottom:calc(var(--pagerH) + 66px)}
+.panel{max-width:790px;margin:0 auto;padding:24px 17px 30px;--acc:var(--cyan)}
+.panel[hidden]{display:none}
+.panel[data-acc="blue"]{--acc:var(--blue)} .panel[data-acc="green"]{--acc:var(--green)}
+.panel[data-acc="violet"]{--acc:var(--violet)} .panel[data-acc="red"]{--acc:var(--red)}
+.panel[data-acc="gold"]{--acc:var(--gold)} .panel[data-acc="magenta"]{--acc:var(--magenta)}
+.panel[data-acc="amber"]{--acc:var(--amber)}
+.sechead{margin-bottom:20px}
+.kicker{font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:2.4px;color:var(--acc);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.kicker::before{content:"";width:8px;height:8px;background:var(--acc);transform:rotate(45deg);flex:none;box-shadow:0 0 10px currentColor}
+.sechead h2{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,6.3vw,2.45rem);line-height:1.12;margin:10px 0 12px;letter-spacing:-.6px}
+.sechead h2 em{font-style:normal;color:var(--acc)}
+.headrule{height:3px;width:74px;border-radius:3px;background:linear-gradient(90deg,var(--acc),transparent);box-shadow:0 0 12px rgba(79,227,247,.35)}
+h3.sub{font-family:var(--fd);font-weight:700;font-size:1.12rem;margin:26px 0 10px;display:flex;gap:9px;align-items:baseline;line-height:1.35}
+h3.sub .n{font-family:var(--fm);font-size:.68em;color:var(--acc);font-weight:700;flex:none}
+p{margin:0 0 12px;color:#CBD9F2}
+p.lead{font-size:16.5px;color:var(--paper)}
+strong{color:var(--paper)}
+.note{font-size:12.5px;color:var(--mut);border-left:2px solid var(--line);padding-left:11px;margin:12px 0}
+.card{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line-soft);border-radius:var(--rad);padding:16px;margin:14px 0;transition:border-color .25s,transform .25s}
+@media(hover:hover){.card:hover{border-color:var(--line);transform:translateY(-2px)}}
+.quote{border-left:3px solid var(--cyan);background:linear-gradient(90deg,rgba(79,227,247,.11),transparent 78%);padding:14px 15px;border-radius:0 12px 12px 0;margin:18px 0;
+  font-family:var(--fd);font-weight:700;font-size:1.02rem;line-height:1.5;color:var(--cyanHi)}
+.quote.big{font-size:clamp(1.15rem,4.9vw,1.55rem);padding:20px 18px;border-left-width:4px}
+.quote.qgreen{border-left-color:var(--green);color:#BDF5CE;background:linear-gradient(90deg,rgba(74,222,128,.1),transparent 78%)}
+.quote.qviolet{border-left-color:var(--violet);color:#E2CCFF;background:linear-gradient(90deg,rgba(181,123,255,.12),transparent 78%)}
+.quote.qred{border-left-color:var(--red);color:#FFC2CE;background:linear-gradient(90deg,rgba(255,92,122,.11),transparent 78%)}
+ul.ticks{list-style:none;margin:6px 0 14px}
+ul.ticks li{position:relative;padding:5px 0 5px 24px;color:#CBD9F2}
+ul.ticks li::before{content:"";position:absolute;left:4px;top:14px;width:7px;height:7px;background:var(--acc,var(--cyan));transform:rotate(45deg)}
+ul.ticks.red li::before{background:var(--red)} ul.ticks.blue li::before{background:var(--blue)}
+ul.ticks.green li::before{background:var(--green)} ul.ticks.violet li::before{background:var(--violet)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 14px}
+.chip{font-family:var(--fm);font-size:11px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--s1);color:var(--mut);line-height:1.4}
+.chip.c-blue{border-color:rgba(76,141,255,.45);color:#B4CEFF}
+.chip.c-green{border-color:rgba(74,222,128,.42);color:#BDF5CE}
+.chip.c-amber{border-color:rgba(255,194,75,.45);color:#FFE0A3}
+.chip.c-red{border-color:rgba(255,92,122,.42);color:#FFC2CE}
+.chip.c-cyan{border-color:rgba(79,227,247,.45);color:var(--cyanHi)}
+.chip.c-violet{border-color:rgba(181,123,255,.45);color:#E2CCFF}
+.numgrid{display:grid;grid-template-columns:1fr;gap:9px;margin:12px 0 16px;counter-reset:ng}
+.numgrid .ng{display:flex;gap:12px;align-items:flex-start;background:var(--s1);border:1px solid var(--line-soft);border-radius:12px;padding:11px 13px}
+.numgrid .ng::before{counter-increment:ng;content:counter(ng,decimal-leading-zero);font-family:var(--fm);font-weight:700;font-size:12px;color:var(--acc,var(--cyan));padding-top:2px;flex:none}
+.numgrid .ng span{font-size:14px;color:#CBD9F2;line-height:1.5}
+@media(min-width:640px){.numgrid{grid-template-columns:1fr 1fr}}
+.tablewrap{overflow-x:auto;margin:12px 0 16px;border:1px solid var(--line-soft);border-radius:12px;background:var(--s1)}
+table.dt{width:100%;border-collapse:collapse;font-size:13.5px}
+table.dt th{font-family:var(--fm);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+table.dt td{padding:10px 12px;border-bottom:1px solid rgba(20,38,79,.6);vertical-align:middle;color:#CBD9F2}
+table.dt tr:last-child td{border-bottom:none}
+table.dt td.num,table.dt th.num{text-align:right;font-family:var(--fm);color:var(--cyanHi);white-space:nowrap}
+.bar{height:6px;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--violet));min-width:4px}
+.bartrack{background:var(--s3);border-radius:4px;height:6px;width:100%;min-width:66px}
+.ledger{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}
+.lrow{background:var(--s1);border:1px solid var(--line-soft);border-radius:12px;padding:13px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.lrow .lact{font-weight:700;font-size:14px;line-height:1.35}
+.lrow .linfo{grid-column:1;font-size:12.5px;color:var(--mut);line-height:1.45}
+.lrow .lprice{grid-column:2;grid-row:1/3;font-family:var(--fm);font-weight:700;font-size:14px;color:var(--cyanHi);text-align:right;white-space:nowrap}
+.lrow .lprice.na{color:var(--mut2);font-size:11px;font-weight:400}
+@media(max-width:390px){.lrow{grid-template-columns:1fr}.lrow .lprice{grid-column:1;grid-row:auto;text-align:left;margin-top:4px}}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 18px}
+@media(min-width:640px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line-soft);border-radius:14px;padding:14px 13px;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sc,var(--cyan)),transparent)}
+.stat .sv{font-family:var(--fd);font-weight:800;font-size:1.85rem;line-height:1.05;color:var(--sc,var(--cyanHi))}
+.stat .sv small{font-size:.52em;font-weight:700}
+.stat .sl{font-family:var(--fm);font-size:9.5px;letter-spacing:.7px;color:var(--mut);margin-top:6px;line-height:1.5;text-transform:uppercase}
+.rank{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.rankcard{display:grid;grid-template-columns:46px 1fr;gap:13px;align-items:center;background:linear-gradient(90deg,var(--s2),var(--s1));border:1px solid var(--line-soft);border-radius:14px;padding:13px 15px}
+.rankcard .rk{font-family:var(--fd);font-weight:800;font-size:1.85rem;color:var(--gold);text-align:center;line-height:1;text-shadow:0 0 20px rgba(255,216,107,.45)}
+.rankcard b{font-size:15px;display:block;line-height:1.3}
+.rankcard span{font-size:12.5px;color:var(--mut);line-height:1.45}
+.timeline{list-style:none;position:relative;margin:16px 0 8px;padding-left:6px}
+.timeline::before{content:"";position:absolute;left:19px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--cyan),var(--blue),var(--violet),var(--magenta))}
+.timeline li{position:relative;padding:0 0 22px 52px}
+.timeline li:last-child{padding-bottom:4px}
+.timeline .tn{position:absolute;left:5px;top:0;width:30px;height:30px;border-radius:50%;background:var(--s2);border:1.5px solid var(--cyan);display:grid;place-items:center;font-family:var(--fm);font-weight:700;font-size:11px;color:var(--cyanHi);box-shadow:0 0 12px rgba(79,227,247,.25)}
+.timeline b.tt{display:block;font-size:15.5px;margin-bottom:4px;padding-top:4px}
+.timeline p{font-size:13.5px;margin-bottom:6px}
+.linkcard{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line-soft);border-radius:13px;padding:12px 13px;margin:10px 0;flex-wrap:wrap}
+.linkcard .lic{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--s3);border:1px solid var(--line);color:var(--cyan)}
+.linkcard.pdf .lic{color:var(--magenta)} .linkcard.news .lic{color:var(--blue)} .linkcard.web .lic{color:var(--green)}
+.linkcard .ltx{flex:1;min-width:150px}
+.linkcard .ltx b{display:block;font-size:13.5px;line-height:1.35}
+.linkcard .ltx .lmeta{font-size:11px;color:var(--mut);margin-top:1px}
+.linkcard .ltx .lurl{font-family:var(--fm);font-size:9.5px;color:var(--mut2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.btn-open{flex:none;display:inline-flex;align-items:center;gap:7px;padding:10px 13px;min-height:42px;border-radius:10px;border:1px solid rgba(79,227,247,.55);
+  background:linear-gradient(135deg,rgba(79,227,247,.16),rgba(181,123,255,.12));color:var(--cyanHi);font-family:var(--fb);font-weight:700;font-size:12px;cursor:pointer;transition:background .2s,transform .15s}
+.btn-open:hover{background:rgba(79,227,247,.3)}
+.btn-open:active{transform:scale(.95)}
+@media(max-width:430px){.linkcard .btn-open{width:100%;justify-content:center}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;min-height:46px;border-radius:11px;border:1px solid var(--line);
+  background:var(--s2);color:var(--paper);font-family:var(--fb);font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .15s,border-color .2s,background .2s}
+.btn:active{transform:scale(.96)}
+.btn:hover{border-color:var(--cyan)}
+.btn-primary{background:linear-gradient(135deg,#7DEFFF,#3B82F6 72%,#8B5CF6);border-color:transparent;color:#04122B;box-shadow:0 6px 20px rgba(79,227,247,.28)}
+.btn-primary:hover{border-color:transparent;background:linear-gradient(135deg,#A9F7FF,#4C8DFF 72%,#A855F7)}
+.btn-sm{padding:8px 13px;min-height:38px;font-size:12px}
+.btn-acid{border-color:rgba(74,222,128,.5);color:#BDF5CE;background:rgba(74,222,128,.1)}
+.btn-acid:hover{border-color:var(--green);background:rgba(74,222,128,.2)}
+.btn-dim{color:var(--mut)}
+details.acc{border:1px solid var(--line-soft);border-radius:12px;background:var(--s1);margin:9px 0;overflow:hidden}
+details.acc summary{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;list-style:none;user-select:none;transition:background .2s}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:hover{background:var(--s2)}
+details.acc .anum{flex:none;min-width:34px;height:34px;padding:0 5px;border-radius:9px;background:var(--s3);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--fm);font-weight:700;font-size:11px;color:var(--cyanHi)}
+details.acc .atitle{flex:1;font-weight:700;font-size:14px;line-height:1.35}
+details.acc .chev{flex:none;color:var(--mut2);transition:transform .25s}
+details.acc[open] .chev{transform:rotate(180deg)}
+details.acc[open]{border-color:var(--line)}
+.accbody{padding:2px 14px 14px;animation:accIn .3s ease}
+@keyframes accIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.fieldlab{font-family:var(--fm);font-size:9.5px;font-weight:700;letter-spacing:1.7px;text-transform:uppercase;margin:12px 0 5px;display:flex;align-items:center;gap:7px}
+.fieldlab::before{content:"";width:6px;height:6px;transform:rotate(45deg);background:currentColor}
+.fl-act{color:var(--cyan)} .fl-cli{color:var(--blue)} .fl-why{color:var(--green)} .fl-risk{color:var(--red)} .fl-mod{color:var(--violet)}
+.accbody p{font-size:13.5px;margin-bottom:8px}
+.accbody ul.ticks li{font-size:13.5px;padding-top:3px;padding-bottom:3px}
+.accbody ul.ticks li::before{top:11px}
+.toolrow{position:sticky;top:var(--headerH);z-index:6;display:flex;gap:8px;flex-wrap:wrap;padding:9px 0;margin:4px 0 10px;background:linear-gradient(180deg,var(--bg) 82%,transparent)}
+.toolrow .btn{flex:1;min-width:140px}
+.qlevel{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+.qlevel .lv{font-family:var(--fm);font-weight:700;font-size:10px;letter-spacing:1.8px;padding:5px 11px;border-radius:999px;white-space:nowrap}
+.lv1{background:rgba(74,222,128,.14);color:#BDF5CE;border:1px solid rgba(74,222,128,.45)}
+.lv2{background:rgba(255,194,75,.14);color:#FFE0A3;border:1px solid rgba(255,194,75,.45)}
+.lv3{background:rgba(181,123,255,.16);color:#E2CCFF;border:1px solid rgba(181,123,255,.5)}
+.qlevel .ll{flex:1;height:1px;background:var(--line-soft)}
+.qa1 .anum{color:#BDF5CE;border-color:rgba(74,222,128,.4)}
+.qa2 .anum{color:#FFE0A3;border-color:rgba(255,194,75,.4)}
+.qa3 .anum{color:#E2CCFF;border-color:rgba(181,123,255,.45)}
+.accbody.qa-a{padding-left:58px}
+@media(max-width:400px){.accbody.qa-a{padding-left:16px}}
+.searchbox{display:flex;align-items:center;gap:9px;background:var(--s1);border:1px solid var(--line);border-radius:11px;padding:0 13px;margin:6px 0 4px}
+.searchbox svg{flex:none;color:var(--mut2)}
+.searchbox input{flex:1;background:none;border:none;outline:none;color:var(--paper);font-family:var(--fb);font-size:14px;padding:12px 0;min-width:0}
+.searchbox input::placeholder{color:var(--mut2)}
+#secCount{font-family:var(--fm);font-size:10.5px;color:var(--mut);letter-spacing:1px;margin:4px 2px 8px}
+#secCount b{color:var(--cyanHi)}
+.calc{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:16px;padding:17px 15px;margin:16px 0;position:relative;overflow:hidden}
+.calc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet),var(--magenta))}
+.calc h4{font-family:var(--fm);font-size:10.5px;font-weight:700;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:14px}
+.crow{margin:11px 0}
+.crow .cl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.crow .cl label{font-size:13px;font-weight:600;color:#CBD9F2;line-height:1.35}
+.crow .cl output{font-family:var(--fm);font-weight:700;font-size:12.5px;color:var(--cyanHi);white-space:nowrap}
+input[type=range]{width:100%;height:26px;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;accent-color:var(--cyan)}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:4px;background:var(--s3)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#A9F7FF,#3B82F6);border:2px solid #04122B;margin-top:-7px;box-shadow:0 0 10px rgba(79,227,247,.55)}
+input[type=range]::-moz-range-track{height:6px;border-radius:4px;background:var(--s3)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#4FE3F7;border:2px solid #04122B}
+.calcout{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:14px;margin-top:14px}
+.calcout .big{font-family:var(--fd);font-weight:800;font-size:2.15rem;line-height:1;color:var(--cyanHi)}
+.calcout .big small{font-size:.42em;color:var(--mut);font-family:var(--fm);font-weight:400}
+.verdict{font-family:var(--fm);font-weight:700;font-size:10.5px;letter-spacing:.8px;padding:8px 12px;border-radius:999px;line-height:1.5;text-transform:uppercase}
+.v-green{background:rgba(74,222,128,.15);color:#BDF5CE;border:1px solid rgba(74,222,128,.5)}
+.v-amber{background:rgba(255,194,75,.15);color:#FFE0A3;border:1px solid rgba(255,194,75,.5)}
+.v-blue{background:rgba(76,141,255,.16);color:#B4CEFF;border:1px solid rgba(76,141,255,.5)}
+.v-red{background:rgba(255,92,122,.15);color:#FFC2CE;border:1px solid rgba(255,92,122,.5)}
+.stackbar{display:flex;height:12px;border-radius:7px;overflow:hidden;background:var(--s3);margin-top:12px}
+.stackbar i{display:block;height:100%;transition:width .25s ease}
+.calcbtos{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media(max-width:420px){.vgrid{grid-template-columns:1fr}}
+.vcell{background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:12px}
+.vcell .vl{font-family:var(--fm);font-size:9px;letter-spacing:1.4px;color:var(--mut2);text-transform:uppercase;margin-bottom:5px}
+.vcell .vv{font-family:var(--fd);font-weight:800;font-size:1.45rem;color:var(--cyanHi);line-height:1.1}
+.vcell .vv.neg{color:var(--red)}
+.riskcard{border-left:3px solid var(--red)}
+.riskcard .rkn{font-family:var(--fm);font-weight:700;font-size:10px;color:var(--red);letter-spacing:1.5px}
+.riskcard b.rt{display:block;font-size:15.5px;margin:3px 0 6px}
+.riskcard p{font-size:13.5px;margin-bottom:4px}
+.terr{border-top:3px solid var(--acc)}
+.terr .tlab{font-family:var(--fm);font-weight:700;font-size:10px;letter-spacing:2px;color:var(--acc);text-transform:uppercase}
+.terr b.tname{display:block;font-family:var(--fd);font-weight:800;font-size:1.25rem;margin:4px 0 10px}
+.heroTop{display:grid;gap:16px;justify-items:center;text-align:center;padding-top:4px}
+.herochips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.hchip{font-family:var(--fm);font-size:9.5px;font-weight:700;letter-spacing:1.8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--cyan);background:var(--s1)}
+.hchip.hb{color:#E2CCFF;border-color:rgba(181,123,255,.45)}
+.hero h1{font-family:var(--fd);font-weight:800;font-size:clamp(2rem,8.6vw,3.5rem);line-height:1.06;letter-spacing:-1px;margin:6px 0 12px}
+.hero h1 .grad{background:linear-gradient(100deg,var(--cyanHi) 5%,var(--cyan) 38%,var(--blue) 66%,var(--violet) 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.byline{display:block;font-family:var(--fm);font-weight:400;font-size:clamp(.82rem,3.3vw,1rem);letter-spacing:1.1px;color:var(--mut);margin-top:14px}
+.byline b{color:var(--cyan);font-weight:700}
+.byline::before{content:"✒ ";color:var(--violet)}
+.herosub{font-size:15.5px;color:var(--mut);max-width:56ch;margin:0 auto 16px}
+.hercta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0 6px}
+.hero .chips{justify-content:center}
+@media(min-width:760px){
+  .heroTop{grid-template-columns:236px 1fr;align-items:center;justify-items:start;text-align:left;gap:30px}
+  .heroLogo{width:236px}
+  .herochips,.hercta,.hero .chips{justify-content:flex-start}
+  .herosub{margin-left:0}
+}
+.marquee{overflow:hidden;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);margin:22px -17px 8px;padding:9px 0;position:relative}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:44px;z-index:2;pointer-events:none}
+.marquee::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.marquee::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.mtrack{display:flex;width:max-content;animation:mq 46s linear infinite;will-change:transform}
+.marquee:hover .mtrack{animation-play-state:paused}
+.mtrack span{font-family:var(--fm);font-size:10.5px;letter-spacing:1.5px;color:var(--mut2);white-space:nowrap;padding-right:14px;text-transform:uppercase}
+.mtrack span b{color:var(--violet);font-weight:400}
+@keyframes mq{to{transform:translateX(-50%)}}
+.paradox{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.px{display:flex;gap:11px;align-items:flex-start;background:var(--s1);border:1px solid var(--line-soft);border-radius:11px;padding:10px 13px;font-size:14px}
+.px i{flex:none;width:9px;height:9px;border-radius:50%;margin-top:7px;background:var(--cyan);box-shadow:0 0 10px rgba(79,227,247,.7)}
+.px.warn i{background:var(--amber);box-shadow:0 0 10px rgba(255,194,75,.7)}
+.px.bad i{background:var(--red);box-shadow:0 0 10px rgba(255,92,122,.7)}
+.endcap{margin-top:36px;border-top:1px dashed var(--line);padding-top:18px}
+.endcap .ecmeta{font-family:var(--fm);font-size:9.5px;letter-spacing:1.8px;color:var(--mut2);text-align:center;margin-bottom:12px;text-transform:uppercase}
+.ecbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ecbtns.solo{grid-template-columns:1fr}
+.ecbtn{display:flex;flex-direction:column;gap:2px;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--s1);cursor:pointer;text-align:left;color:var(--paper);transition:border-color .2s,transform .15s;font-family:var(--fb)}
+.ecbtn:hover{border-color:var(--cyan)}
+.ecbtn:active{transform:scale(.97)}
+.ecbtn small{font-family:var(--fm);font-size:9px;letter-spacing:1.6px;color:var(--mut2);text-transform:uppercase}
+.ecbtn b{font-size:13.5px;line-height:1.3}
+.ecbtn.next{background:linear-gradient(135deg,rgba(79,227,247,.18),rgba(181,123,255,.12));border-color:rgba(79,227,247,.5);text-align:right}
+.ecbtn.next small{color:var(--cyanHi)}
+#pager{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(4,9,28,.97);border-top:1px solid var(--line-soft);
+  display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+.pbtn{display:flex;flex-direction:column;gap:1px;padding:8px 12px;min-height:50px;border-radius:11px;border:1px solid var(--line);background:var(--s1);color:var(--paper);cursor:pointer;font-family:var(--fb);transition:transform .15s,border-color .2s;min-width:0}
+.pbtn:active{transform:scale(.96)}
+.pbtn small{font-family:var(--fm);font-size:8.5px;letter-spacing:1.4px;color:var(--mut2);text-transform:uppercase}
+.pbtn b{font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbtn.pnext{background:linear-gradient(135deg,#7DEFFF,#3B82F6 72%,#8B5CF6);border-color:transparent;color:#04122B;text-align:right;align-items:flex-end;box-shadow:0 4px 16px rgba(79,227,247,.25)}
+.pbtn.pnext small{color:#0d3556}
+.pbtn.off{opacity:.32;pointer-events:none}
+#pcount{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--cyanHi);text-align:center;line-height:1.3}
+#pcount small{display:block;font-size:7.5px;letter-spacing:1.8px;color:var(--mut2);font-weight:400}
+.fab{position:fixed;left:0;top:0;z-index:45;width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;border:1.5px solid rgba(79,227,247,.75);
+  background:radial-gradient(circle at 32% 28%,var(--s3),var(--s1) 70%);color:var(--cyanHi);
+  box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 0 4px rgba(79,227,247,.08);font-family:var(--fm)}
+.fab span{font-size:7px;font-weight:700;letter-spacing:1.1px}
+.fab.violet{border-color:rgba(181,123,255,.75);color:#E2CCFF;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 0 4px rgba(181,123,255,.1)}
+.fab.snap{transition:transform .28s cubic-bezier(.22,.9,.3,1)}
+.fab.drag{cursor:grabbing;transition:none}
+.fab.pulse{animation:pulse .45s ease}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,227,247,.55)}100%{box-shadow:0 0 0 20px rgba(79,227,247,0)}}
+.creditcard{text-align:center;padding:24px 18px}
+.creditcard .cname{font-family:var(--fd);font-weight:800;font-size:clamp(1.85rem,7.6vw,2.7rem);
+  background:linear-gradient(100deg,var(--cyanHi),var(--blue) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1;margin:10px 0 4px}
+.creditcard .crole{font-family:var(--fm);font-size:10px;letter-spacing:2.4px;color:var(--cyan);text-transform:uppercase}
+.cmeta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:16px 0 6px}
+.cmeta .cm{font-family:var(--fm);font-size:12.5px;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:var(--s1);color:var(--paper)}
+.rv{opacity:0;transform:translateY(15px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:none}
+.noscript{background:var(--red);color:#2b0703;font-weight:700;text-align:center;padding:10px;font-size:13px}
+@media(min-width:720px){.panel{padding:34px 26px 40px}.marquee{margin-left:-26px;margin-right:-26px}body{font-size:16px}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important}
+  .rv{opacity:1;transform:none}.mtrack{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════ LOGO IA TUTORIALES (SVG nativo) ═════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+  <linearGradient id="gShield" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#9BF4FF"/><stop offset=".42" stop-color="#3FB9F5"/><stop offset="1" stop-color="#A855F7"/>
+  </linearGradient>
+  <linearGradient id="gBrain" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#A9F7FF"/><stop offset="1" stop-color="#3E8BFF"/>
+  </linearGradient>
+  <linearGradient id="gCirc" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#7DEFFF"/><stop offset=".55" stop-color="#7C8CFF"/><stop offset="1" stop-color="#D9A6FF"/>
+  </linearGradient>
+  <linearGradient id="gIA" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#BFFAFF"/><stop offset=".48" stop-color="#4FD8F5"/><stop offset="1" stop-color="#2F6BFF"/>
+  </linearGradient>
+  <linearGradient id="gPlay" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#DFFCFF"/><stop offset="1" stop-color="#3FA9F5"/>
+  </linearGradient>
+  <filter id="fGlow" x="-45%" y="-45%" width="190%" height="190%">
+    <feGaussianBlur stdDeviation="4.5" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <g id="markGeo">
+    <path d="M120 10C152 32 186 44 208 48V132C208 190 170 232 120 258C70 232 32 190 32 132V48C54 44 88 32 120 10Z" fill="#071230" fill-opacity=".72"/>
+    <!-- red neuronal izquierda -->
+    <g stroke="#4FE3F7" stroke-opacity=".45" stroke-width="1.4" fill="none">
+      <path d="M46 86L38 112L52 140L40 168L58 192"/><path d="M38 112L60 106"/><path d="M52 140L70 152"/><path d="M40 168L62 176"/>
+    </g>
+    <g fill="#7DEFFF" fill-opacity=".75">
+      <circle cx="46" cy="86" r="3"/><circle cx="38" cy="112" r="2.4"/><circle cx="52" cy="140" r="3.4"/>
+      <circle cx="40" cy="168" r="2.4"/><circle cx="58" cy="192" r="3"/><circle cx="60" cy="106" r="2"/><circle cx="62" cy="176" r="2"/>
+    </g>
+    <!-- red neuronal derecha -->
+    <g stroke="#C77DFF" stroke-opacity=".5" stroke-width="1.4" fill="none">
+      <path d="M198 70L214 96L196 118L216 142L200 170L214 192"/><path d="M214 96L192 104"/><path d="M216 142L192 150"/><path d="M200 170L182 186"/>
+    </g>
+    <g fill="#D9A6FF" fill-opacity=".85">
+      <circle cx="198" cy="70" r="3"/><circle cx="214" cy="96" r="3.6"/><circle cx="196" cy="118" r="2.4"/>
+      <circle cx="216" cy="142" r="3.4"/><circle cx="200" cy="170" r="2.6"/><circle cx="214" cy="192" r="3"/><circle cx="192" cy="104" r="2"/><circle cx="182" cy="186" r="2.2"/>
+    </g>
+    <!-- hemisferio izquierdo: cerebro -->
+    <g stroke="url(#gBrain)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M116 62C96 55 78 63 72 79C58 83 51 98 58 110C48 120 50 137 62 145C58 159 68 173 82 175C88 189 104 195 116 188Z"/>
+      <path d="M104 84C92 84 86 94 92 102C98 110 92 118 82 116"/>
+      <path d="M104 114C94 118 92 130 100 136C108 142 104 154 94 156"/>
+      <path d="M104 148C96 154 96 166 104 170"/>
+      <path d="M70 96C78 100 80 108 74 114"/>
+      <path d="M64 132C72 134 76 142 70 148"/>
+    </g>
+    <!-- hemisferio derecho: circuito -->
+    <g stroke="url(#gCirc)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M124 66V184"/>
+      <path d="M124 74H150C158 74 162 78 162 86V96"/>
+      <path d="M124 94H142C150 94 154 98 154 106V120"/>
+      <path d="M124 114H168C176 114 180 118 180 126V136"/>
+      <path d="M124 134H150C158 134 162 138 162 146V156"/>
+      <path d="M124 154H172C180 154 184 158 184 166V172"/>
+      <path d="M124 174H146C154 174 158 178 158 186V192"/>
+      <path d="M170 82V102"/><path d="M190 100V128"/>
+    </g>
+    <g fill="url(#gCirc)">
+      <circle cx="162" cy="96" r="4.6"/><circle cx="154" cy="120" r="4.2"/><circle cx="180" cy="136" r="5"/>
+      <circle cx="162" cy="156" r="4.2"/><circle cx="184" cy="172" r="4.6"/><circle cx="158" cy="192" r="4"/>
+      <circle cx="170" cy="82" r="4"/><circle cx="190" cy="100" r="3.6"/><circle cx="190" cy="128" r="3.6"/>
+    </g>
+    <!-- escudo -->
+    <g filter="url(#fGlow)">
+      <path d="M120 10C152 32 186 44 208 48V132C208 190 170 232 120 258C70 232 32 190 32 132V48C54 44 88 32 120 10Z"
+        fill="none" stroke="url(#gShield)" stroke-width="7" stroke-linejoin="round"/>
+    </g>
+    <!-- play central -->
+    <circle cx="120" cy="126" r="29" fill="#061027" stroke="url(#gShield)" stroke-width="5"/>
+    <path d="M111 111L137 126L111 141Z" fill="url(#gPlay)"/>
+  </g>
+
+  <g id="wordGeo">
+    <g filter="url(#fGlow)">
+      <rect x="64" y="0" width="22" height="96" rx="2" fill="url(#gIA)" stroke="#9BF4FF" stroke-width="2.4"/>
+      <path transform="translate(98,0)" fill-rule="evenodd" d="M38 0L76 96L55 96L48 77L28 77L21 96L0 96Z M38 32L45 60L31 60Z"
+        fill="url(#gIA)" stroke="#9BF4FF" stroke-width="2.4" stroke-linejoin="round"/>
+    </g>
+    <text x="120" y="119" text-anchor="middle" font-family="Sora, system-ui, sans-serif" font-weight="800" font-size="25" letter-spacing="2.6" fill="#7FE9FF">TUTORIALES</text>
+  </g>
+</defs>
+</svg>
+
+<div id="bgGrid"></div><div class="glow" id="glowA"></div><div class="glow" id="glowB"></div><div id="grain"></div>
+<svg id="bgShield" viewBox="0 0 240 270" aria-hidden="true"><path d="M120 10C152 32 186 44 208 48V132C208 190 170 232 120 258C70 232 32 190 32 132V48C54 44 88 32 120 10Z" fill="none" stroke="#4FE3F7" stroke-width="6"/><path d="M105 105L150 130L105 155Z" fill="#B57BFF"/></svg>
+<noscript><div class="noscript">Activa JavaScript para navegar por las pestañas, el índice y las herramientas interactivas.</div></noscript>
+
+<header id="topbar">
+  <div class="brandrow">
+    <div class="brand">
+      <svg class="brandMark" viewBox="0 0 240 270" role="img" aria-label="Logo IA Tutoriales"><use href="#markGeo"/></svg>
+      <div class="brandtxt"><b>IA TUTORIALES</b><span>RIQUEZA EN SILENCIO · ESPAÑA 2026</span></div>
+    </div>
+    <button id="btnIndex" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
+      <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>ÍNDICE
+    </button>
+  </div>
+  <nav id="tabstrip" role="tablist" aria-label="Secciones del documento"></nav>
+  <div id="progress"></div>
+</header>
+
+<div id="scrim"></div>
+<aside id="drawer" role="dialog" aria-modal="true" aria-label="Índice completo">
+  <div class="drawerhead">
+    <svg class="brandMark" viewBox="0 0 240 270" aria-hidden="true"><use href="#markGeo"/></svg>
+    <div class="dh"><h2>Índice <span>completo</span></h2><p>19 SECCIONES · ACCESO DIRECTO</p></div>
+    <button id="btnCloseDrawer" aria-label="Cerrar índice">✕</button>
+  </div>
+  <div id="drawerList"></div>
+  <div class="drawerfoot">IA TUTORIALES · <b>by Rubén Sbarsky</b></div>
+</aside>
+
+<main id="main">
+
+<!-- ════ 0 · INICIO ════ -->
+<section class="panel" id="p-inicio" role="tabpanel" data-acc="cyan">
+  <div class="hero">
+    <div class="heroTop">
+      <div class="logoHalo rv">
+        <svg class="heroLogo" viewBox="0 0 240 400" role="img" aria-label="IA Tutoriales: escudo neón con cerebro, circuito y botón de play">
+          <use href="#markGeo"/><use href="#wordGeo" transform="translate(0,276)"/>
+          <g fill="#DFFCFF">
+            <circle class="spark" cx="162" cy="96" r="5.4"/><circle class="spark" cx="180" cy="136" r="6"/>
+            <circle class="spark" cx="184" cy="172" r="5.4"/><circle class="spark" cx="170" cy="82" r="4.8"/>
+            <circle class="spark" cx="190" cy="128" r="4.4"/>
+          </g>
+          <path class="flow" d="M124 114H168C176 114 180 118 180 126V136" fill="none" stroke="#DFFCFF" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="heroText">
+        <div class="herochips rv"><span class="hchip">INVESTIGACIÓN ESTRATÉGICA</span><span class="hchip hb">ESPAÑA · 2026</span></div>
+        <h1 class="rv">Negocios tradicionales que generan <span class="grad">riqueza en silencio</span>
+          <span class="byline">by <b>Rubén Sbarsky</b></span>
+        </h1>
+        <p class="herosub rv">La oportunidad empresarial de adquirir negocios rentables sin relevo generacional.</p>
+        <div class="chips rv"><span class="chip c-cyan">20 sectores</span><span class="chip c-violet">33 preguntas</span><span class="chip c-green">10 fases</span><span class="chip c-blue">Scorecard de 100 puntos</span></div>
+        <div class="hercta rv">
+          <button class="btn btn-primary" data-goto="1">Comenzar: Datos y cifras →</button>
+          <button class="btn" id="heroIndex">☰ Ver índice</button>
+        </div>
+      </div>
+    </div>
+    <div class="marquee rv" aria-hidden="true"><div class="mtrack" id="mtrack"></div></div>
+  </div>
+
+  <div class="sechead rv" style="margin-top:26px">
+    <div class="kicker">Sección 01 · Introducción</div>
+    <h2>Una oportunidad que casi <em>nadie mira</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">Existe un tipo de oportunidad empresarial que recibe mucha menos atención que las startups tecnológicas, las aplicaciones móviles, las criptomonedas o los negocios de moda.</p>
+  <p class="rv">Son empresas tradicionales que llevan décadas funcionando, tienen clientes, generan ingresos, poseen maquinaria, instalaciones, conocimientos técnicos y relaciones comerciales consolidadas.</p>
+  <p class="rv">Muchas fueron fundadas por personas que empezaron prácticamente desde cero y construyeron negocios que han sobrevivido durante 20, 30 o incluso 50 años.</p>
+  <p class="rv">Sin embargo, sus propietarios se acercan a la jubilación y se encuentran con un problema:</p>
+  <div class="quote rv">Sus hijos no quieren continuar con el negocio.</div>
+  <p class="rv">No necesariamente porque sea malo, sino porque han elegido otros caminos profesionales, tienen otros intereses o no desean asumir las responsabilidades de una empresa familiar.</p>
+  <p class="rv">En algunos casos, tampoco hay empleados interesados en hacerse cargo.</p>
+  <p class="rv"><strong>El resultado es una situación paradójica:</strong></p>
+  <div class="paradox rv">
+    <div class="px"><i></i>Empresas que todavía funcionan.</div>
+    <div class="px"><i></i>Clientes que siguen necesitando sus servicios.</div>
+    <div class="px"><i></i>Instalaciones y maquinaria operativas.</div>
+    <div class="px"><i></i>Personal experimentado.</div>
+    <div class="px"><i></i>Conocimiento acumulado durante décadas.</div>
+    <div class="px warn"><i></i>Propietarios que desean retirarse.</div>
+    <div class="px bad"><i></i>Ausencia de sucesores.</div>
+  </div>
+  <p class="rv">Algunas terminan cerrando. Otras se venden por debajo de su potencial porque el propietario no ha preparado adecuadamente la transmisión.</p>
+  <p class="rv"><strong>Aquí aparece una oportunidad:</strong></p>
+  <div class="quote qviolet big rv">Adquirir una empresa que ya ha demostrado que existe un mercado y modernizarla sin destruir aquello que la hizo funcionar.</div>
+  <p class="rv">No se trata de comprar cualquier negocio barato. Se trata de comprar capacidad productiva, clientela, reputación, conocimientos y flujos de ingresos existentes.</p>
+</section>
+
+<!-- ════ 1 · DATOS ════ -->
+<section class="panel" id="p-datos" role="tabpanel" data-acc="blue">
+  <div class="sechead rv">
+    <div class="kicker">Sección 02 · Evidencia</div>
+    <h2>La oportunidad existe y hay <em>datos que la respaldan</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <h3 class="sub rv"><span class="n">2.1</span>El problema del relevo generacional</h3>
+  <p class="rv">El <strong>Informe Pyme 2026 de FAEDPYME y el Consejo General de Economistas</strong>, basado en una muestra de <strong>636 pymes españolas</strong>, ofrece datos especialmente interesantes:</p>
+  <div class="stats rv">
+    <div class="stat" style="--sc:var(--cyanHi)"><div class="sv"><span class="count" data-val="67" data-dec="0">0</span><small> %</small></div><div class="sl">se identifica como empresa familiar</div></div>
+    <div class="stat" style="--sc:var(--blue)"><div class="sv"><span class="count" data-val="26.5" data-dec="1">0</span><small> años</small></div><div class="sl">antigüedad media de las pymes</div></div>
+    <div class="stat" style="--sc:var(--violet)"><div class="sv"><span class="count" data-val="28.6" data-dec="1">0</span><small> años</small></div><div class="sl">antigüedad media en empresas familiares</div></div>
+    <div class="stat" style="--sc:var(--green)"><div class="sv"><span class="count" data-val="37.4" data-dec="1">0</span><small> %</small></div><div class="sl">contempla transmisión generacional en 2–3 años</div></div>
+    <div class="stat" style="--sc:var(--amber)"><div class="sv"><span class="count" data-val="32.2" data-dec="1">0</span><small> %</small></div><div class="sl">contempla la venta total o parcial</div></div>
+    <div class="stat" style="--sc:var(--red)"><div class="sv"><span class="count" data-val="10.5" data-dec="1">0</span><small> %</small></div><div class="sl">contempla el cierre</div></div>
+  </div>
+  <p class="rv">La antigüedad media por sectores también resulta interesante:</p>
+  <div class="tablewrap rv">
+    <table class="dt">
+      <thead><tr><th>Sector</th><th style="width:34%">Magnitud</th><th class="num">Antigüedad media</th></tr></thead>
+      <tbody>
+        <tr><td>Industria</td><td><div class="bartrack"><div class="bar" style="width:100%"></div></div></td><td class="num">32,2 años</td></tr>
+        <tr><td>Comercio</td><td><div class="bartrack"><div class="bar" style="width:90.7%"></div></div></td><td class="num">29,2 años</td></tr>
+        <tr><td>Servicios</td><td><div class="bartrack"><div class="bar" style="width:76.7%"></div></div></td><td class="num">24,7 años</td></tr>
+        <tr><td>Construcción</td><td><div class="bartrack"><div class="bar" style="width:70.5%"></div></div></td><td class="num">22,7 años</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note rv">Estos datos no significan que todas esas empresas estén en venta. Sí demuestran que existe un tejido empresarial maduro y que la continuidad es una cuestión relevante.</p>
+  <div class="link-slot rv" data-link="pyme2026"></div>
+
+  <h3 class="sub rv"><span class="n">2.2</span>Un ejemplo real de empresas en venta</h3>
+  <p class="rv">El periódico <strong>Cinco Días</strong> publicó el <strong>8 de octubre de 2026</strong> varios ejemplos de empresas españolas ofrecidas por jubilación o falta de relevo generacional.</p>
+  <div class="ledger rv">
+    <div class="lrow"><div class="lact">Producción y comercialización agrícola</div><div class="linfo">Más de 100 hectáreas, más de 35 años de historia y facturación superior a 9 millones</div><div class="lprice na">No publicado</div></div>
+    <div class="lrow"><div class="lact">Lavandería industrial</div><div class="linfo">Entre 5 y 20 empleados</div><div class="lprice">899.000 €</div></div>
+    <div class="lrow"><div class="lact">Fábrica de hielo</div><div class="linfo">11 empleados</div><div class="lprice">2.250.000 €</div></div>
+    <div class="lrow"><div class="lact">Distribución de paneles metálicos</div><div class="linfo">Empresa especializada</div><div class="lprice">189.000 €</div></div>
+  </div>
+  <p class="note rv">Son anuncios reales recogidos por el periódico en la fecha de publicación. No constituyen una valoración independiente ni garantizan rentabilidad.</p>
+  <div class="link-slot rv" data-link="cincodias"></div>
+
+  <h3 class="sub rv"><span class="n">2.3</span>Una oportunidad que también preocupa a las instituciones</h3>
+  <p class="rv">Un informe elaborado por una comisión internacional de expertos vinculada al <strong>Ministerio de Trabajo y Economía Social</strong> aborda expresamente la crisis de sucesión de las pymes.</p>
+  <p class="rv">El problema no es exclusivamente económico: cuando una empresa viable desaparece, también desaparecen empleos, conocimientos, proveedores y actividad económica local.</p>
+  <div class="link-slot rv" data-link="mitess"></div>
+</section>
+
+<!-- ════ 2 · PERFIL ════ -->
+<section class="panel" id="p-perfil" role="tabpanel" data-acc="green">
+  <div class="sechead rv">
+    <div class="kicker">Sección 03 · Criterios</div>
+    <h2>¿Qué tipo de negocios <em>buscamos</em>?</h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="lead rv">No todos los negocios tradicionales son buenas oportunidades.</p>
+  <p class="rv">Buscamos empresas con una combinación de características:</p>
+  <div class="numgrid rv">
+    <div class="ng"><span>Actividad necesaria para otros negocios o consumidores.</span></div>
+    <div class="ng"><span>Demanda relativamente estable.</span></div>
+    <div class="ng"><span>Clientes que repiten.</span></div>
+    <div class="ng"><span>Contratos de mantenimiento o suministro.</span></div>
+    <div class="ng"><span>Equipamiento e infraestructura aprovechables.</span></div>
+    <div class="ng"><span>Conocimientos especializados.</span></div>
+    <div class="ng"><span>Competencia limitada en determinadas zonas.</span></div>
+    <div class="ng"><span>Posibilidad de delegar el trabajo.</span></div>
+    <div class="ng"><span>Propietario próximo a retirarse.</span></div>
+    <div class="ng"><span>Ausencia de sucesor interesado.</span></div>
+    <div class="ng"><span>Contabilidad verificable.</span></div>
+    <div class="ng"><span>Potencial de modernización mediante tecnología e IA.</span></div>
+  </div>
+  <p class="rv">Una característica especialmente interesante es la <strong>recurrencia</strong>.</p>
+  <p class="rv">Una empresa que vende una vez puede necesitar encontrar un cliente nuevo cada día.</p>
+  <p class="rv">Una empresa que mantiene cámaras frigoríficas, ascensores, sistemas de agua o instalaciones contra incendios puede tener clientes que necesitan sus servicios durante años.</p>
+  <p class="rv"><strong>La recurrencia permite construir previsibilidad.</strong></p>
+  <div class="quote qgreen big rv">La riqueza silenciosa suele estar en resolver problemas que los clientes no pueden permitirse ignorar.</div>
+</section>
+
+<!-- ════ 3 · SECTORES ════ -->
+<section class="panel" id="p-sectores" role="tabpanel" data-acc="cyan">
+  <div class="sechead rv">
+    <div class="kicker">Sección 04 · Mapa de actividades</div>
+    <h2>Los <em>20 sectores</em> que merecen investigación</h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="note rv">La siguiente selección es una hipótesis de búsqueda empresarial. No es un ranking estadístico de rentabilidad ni una afirmación de que todos estos negocios estén actualmente disponibles para su adquisición.</p>
+  <div class="searchbox rv">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="secSearch" type="search" placeholder="Filtrar sectores, clientes, actividades…" aria-label="Filtrar sectores">
+  </div>
+  <div id="secCount" class="rv">Mostrando <b>20</b> de 20 sectores</div>
+  <div class="toolrow">
+    <button class="btn btn-sm btn-acid" id="secExpand">+ Desplegar los 20 sectores</button>
+    <button class="btn btn-sm btn-dim" id="secCollapse">− Plegar todos</button>
+  </div>
+  <div id="secList"></div>
+</section>
+
+<!-- ════ 4 · TOP 5 ════ -->
+<section class="panel" id="p-prioridades" role="tabpanel" data-acc="gold">
+  <div class="sechead rv">
+    <div class="kicker">Sección 05 · Priorización</div>
+    <h2>Los cinco sectores que <em>investigaría primero</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">Para una primera investigación, priorizaría:</p>
+  <div class="rank rv">
+    <div class="rankcard"><div class="rk">1</div><div><b>Refrigeración comercial</b><span>Necesidad crítica y mantenimiento</span></div></div>
+    <div class="rankcard"><div class="rk">2</div><div><b>Limpieza industrial especializada</b><span>Contratos empresariales recurrentes</span></div></div>
+    <div class="rankcard"><div class="rk">3</div><div><b>Control de plagas</b><span>Prevención y revisiones periódicas</span></div></div>
+    <div class="rankcard"><div class="rk">4</div><div><b>Lavandería industrial</b><span>Infraestructura y clientes recurrentes</span></div></div>
+    <div class="rankcard"><div class="rk">5</div><div><b>Tratamiento de agua</b><span>Mantenimiento y consumibles</span></div></div>
+  </div>
+  <p class="rv">La selección combina atractivo económico potencial, recurrencia, posibilidad de profesionalización y conocimientos técnicos.</p>
+  <p class="rv">No significa que sean necesariamente las empresas más rentables ni las más baratas.</p>
+  <p class="rv">Una empresa de mantenimiento de ascensores, por ejemplo, puede ser excelente, pero también puede exigir una estructura técnica y financiera que la convierta en una adquisición mucho más compleja.</p>
+</section>
+
+<!-- ════ 5 · VALOR OCULTO ════ -->
+<section class="panel" id="p-valor" role="tabpanel" data-acc="violet">
+  <div class="sechead rv">
+    <div class="kicker">Sección 06 · El activo invisible</div>
+    <h2>El negocio no es solamente <em>lo que vende</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">Uno de los errores más frecuentes consiste en valorar una empresa por su actividad aparente.</p>
+  <p class="rv">Por ejemplo: <strong>una lavandería no es solamente un local con lavadoras.</strong> Puede tener:</p>
+  <div class="chips rv">
+    <span class="chip c-blue">Contratos con hoteles</span><span class="chip c-blue">Relaciones con residencias</span>
+    <span class="chip c-cyan">Rutas de recogida</span><span class="chip c-cyan">Vehículos</span>
+    <span class="chip c-green">Personal experimentado</span><span class="chip c-cyan">Sistemas de clasificación</span>
+    <span class="chip c-cyan">Instalaciones</span><span class="chip c-green">Conocimiento operativo</span>
+    <span class="chip c-violet">Reputación comercial</span><span class="chip c-violet">Acuerdos con proveedores</span>
+  </div>
+  <p class="rv"><strong>El valor de la empresa está en el conjunto.</strong></p>
+  <p class="rv">Lo mismo sucede con una empresa de refrigeración. No se compra solamente una furgoneta y herramientas. Se compra la posibilidad de atender a clientes que ya confían en esa empresa.</p>
+  <div class="quote qviolet big rv">El activo más valioso puede ser aquello que no aparece en el inventario de maquinaria: la relación comercial construida durante décadas.</div>
+  <p class="rv">Sin embargo, hay que comprobar que esas relaciones pertenecen realmente a la empresa y no exclusivamente al propietario.</p>
+</section>
+
+<!-- ════ 6 · DÓNDE BUSCAR ════ -->
+<section class="panel" id="p-buscar" role="tabpanel" data-acc="green">
+  <div class="sechead rv">
+    <div class="kicker">Sección 07 · Localización</div>
+    <h2>Cómo encontrar empresas que sus <em>propietarios quieren dejar</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">No conviene limitarse a buscar anuncios de negocios en venta. <strong>Muchos propietarios nunca publican un anuncio.</strong> Pueden estar esperando una solución, pero no saben cómo encontrarla.</p>
+
+  <h3 class="sub rv"><span class="n">7.1</span>Portales y plataformas</h3>
+  <p class="rv">Algunas fuentes para comenzar:</p>
+  <div class="link-slot rv" data-link="tupyme"></div>
+  <div class="link-slot rv" data-link="compramos"></div>
+  <div class="link-slot rv" data-link="bfs"></div>
+  <div class="link-slot rv" data-link="traspaso"></div>
+  <p class="note rv">También conviene investigar intermediarios especializados en compraventa de empresas. La disponibilidad y calidad de los anuncios debe comprobarse individualmente.</p>
+
+  <h3 class="sub rv"><span class="n">7.2</span>Cámaras de Comercio</h3>
+  <p class="rv">Las Cámaras de Comercio pueden ser una vía para conocer:</p>
+  <ul class="ticks rv"><li>Programas de transmisión empresarial.</li><li>Negocios sin sucesión.</li><li>Empresas que buscan compradores.</li><li>Programas de emprendimiento mediante adquisición.</li></ul>
+  <p class="rv">Consultar las cámaras provinciales y autonómicas.</p>
+
+  <h3 class="sub rv"><span class="n">7.3</span>Asociaciones sectoriales</h3>
+  <p class="rv">Cada sector tiene asociaciones, gremios y agrupaciones profesionales. Ejemplos:</p>
+  <div class="chips rv"><span class="chip">Asociaciones de lavanderías</span><span class="chip">Asociaciones de instaladores frigoristas</span><span class="chip">Asociaciones de empresas de control de plagas</span><span class="chip">Asociaciones de mantenimiento industrial</span><span class="chip">Asociaciones de fabricantes</span><span class="chip">Asociaciones de empresas de limpieza</span></div>
+  <p class="rv">Pueden ayudar a identificar propietarios próximos a jubilarse.</p>
+
+  <h3 class="sub rv"><span class="n">7.4</span>Gestorías y asesorías</h3>
+  <p class="rv">Esta es una vía especialmente interesante. Los asesores fiscales, laborales y contables conocen empresas que llevan décadas trabajando con ellos. En ocasiones conocen situaciones como:</p>
+  <ul class="ticks rv"><li>Propietario próximo a jubilarse.</li><li>Hijos que no quieren continuar.</li><li>Empresa sin dirección profesionalizada.</li><li>Negocio que necesita un socio.</li><li>Actividad que podría desaparecer.</li></ul>
+  <p class="note rv">No significa que puedan divulgar información confidencial. La aproximación debe respetar la privacidad de sus clientes.</p>
+
+  <h3 class="sub rv"><span class="n">7.5</span>Búsqueda directa</h3>
+  <p class="rv">La búsqueda directa puede ser más eficaz que esperar anuncios. Ejemplo de estrategia:</p>
+  <ol class="timeline rv">
+    <li><span class="tn">1</span><b class="tt">Elegir una actividad.</b></li>
+    <li><span class="tn">2</span><b class="tt">Identificar municipios y polígonos industriales.</b></li>
+    <li><span class="tn">3</span><b class="tt">Localizar empresas con más de 20 años.</b></li>
+    <li><span class="tn">4</span><b class="tt">Investigar su estructura y actividad.</b></li>
+    <li><span class="tn">5</span><b class="tt">Identificar señales públicas de posible relevo.</b></li>
+    <li><span class="tn">6</span><b class="tt">Contactar de manera profesional.</b></li>
+    <li><span class="tn">7</span><b class="tt">Preguntar si contemplan una transmisión o incorporación de socios.</b></li>
+  </ol>
+  <div class="quote qgreen rv">No se trata de preguntar indiscriminadamente si quieren vender. Se trata de presentar una alternativa de continuidad.</div>
+</section>
+
+<!-- ════ 7 · RENTABILIDAD ════ -->
+<section class="panel" id="p-rentabilidad" role="tabpanel" data-acc="magenta">
+  <div class="sechead rv">
+    <div class="kicker">Sección 08 · Due diligence económica</div>
+    <h2>Cómo saber si una empresa es <em>realmente rentable</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="lead rv">Aquí empieza el trabajo serio.</p>
+  <p class="rv">Una empresa puede facturar dos millones de euros y perder dinero. Otra puede facturar 400.000 euros y tener una estructura rentable.</p>
+  <div class="quote qred rv">La facturación no es el beneficio.</div>
+
+  <h3 class="sub rv"><span class="n">8.1</span>Las cifras fundamentales</h3>
+  <p class="rv">Hay que solicitar, como mínimo:</p>
+  <div class="numgrid rv">
+    <div class="ng"><span>Facturación de los últimos cinco ejercicios.</span></div>
+    <div class="ng"><span>Beneficio neto.</span></div>
+    <div class="ng"><span>EBITDA.</span></div>
+    <div class="ng"><span>Deuda bancaria.</span></div>
+    <div class="ng"><span>Deudas con proveedores.</span></div>
+    <div class="ng"><span>Impuestos pendientes.</span></div>
+    <div class="ng"><span>Costes laborales.</span></div>
+    <div class="ng"><span>Alquileres.</span></div>
+    <div class="ng"><span>Inversiones necesarias.</span></div>
+    <div class="ng"><span>Tesorería.</span></div>
+    <div class="ng"><span>Cuentas anuales.</span></div>
+    <div class="ng"><span>Evolución de clientes.</span></div>
+  </div>
+  <p class="rv">El <strong>EBITDA</strong> es el resultado antes de intereses, impuestos, depreciaciones y amortizaciones.</p>
+  <p class="rv">Es útil para analizar la capacidad operativa del negocio, pero no representa automáticamente el dinero disponible para el propietario. Hay que descontar inversiones necesarias, financiación, impuestos y necesidades de circulante.</p>
+
+  <h3 class="sub rv"><span class="n">8.2</span>La trampa del propietario imprescindible</h3>
+  <div class="card rv">
+    <p><strong>Imaginemos:</strong> una empresa factura <strong>800.000 euros</strong> al año. El propietario afirma que gana <strong>120.000 euros</strong>. Pero descubrimos que:</p>
+    <ul class="ticks red">
+      <li>Trabaja diez horas diarias.</li><li>Atiende personalmente a los clientes principales.</li>
+      <li>Realiza reparaciones.</li><li>Gestiona compras.</li><li>Supervisa empleados.</li><li>Resuelve todas las incidencias.</li>
+    </ul>
+    <p style="margin-bottom:0">Si desaparece el propietario, desaparece también una parte esencial de la empresa.</p>
+  </div>
+  <p class="rv">Por eso hay que calcular el beneficio después de imputar un coste razonable para sustituir su trabajo.</p>
+  <div class="quote qred big rv">No debemos comprar un empleo disfrazado de empresa.</div>
+
+  <h3 class="sub rv"><span class="n">8.3</span>Concentración de clientes</h3>
+  <p class="rv">Una empresa puede parecer sólida y depender realmente de dos clientes. Ejemplo:</p>
+  <div class="tablewrap rv">
+    <table class="dt">
+      <thead><tr><th>Cliente</th><th style="width:36%">Peso</th><th class="num">% de facturación</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cliente A</strong></td><td><div class="bartrack"><div class="bar" style="width:45%;background:linear-gradient(90deg,var(--red),var(--magenta))"></div></div></td><td class="num" style="color:var(--red)">45 %</td></tr>
+        <tr><td><strong>Cliente B</strong></td><td><div class="bartrack"><div class="bar" style="width:30%;background:linear-gradient(90deg,var(--amber),var(--gold))"></div></div></td><td class="num" style="color:var(--amber)">30 %</td></tr>
+        <tr><td>Otros</td><td><div class="bartrack"><div class="bar" style="width:25%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div></td><td class="num" style="color:var(--green)">25 %</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="rv">La pérdida del cliente A puede provocar una crisis. <strong>Es preferible una cartera diversificada.</strong></p>
+
+  <h3 class="sub rv"><span class="n">8.4</span>Antigüedad de las relaciones comerciales</h3>
+  <p class="rv">Investigar:</p>
+  <ul class="ticks blue rv">
+    <li>Cuánto tiempo lleva cada cliente.</li><li>Qué contratos existen.</li><li>Si los contratos se pueden transmitir.</li>
+    <li>Si hay renovaciones automáticas.</li><li>Si existe dependencia personal del fundador.</li>
+    <li>Si los clientes aceptarían continuar con el nuevo propietario.</li>
+  </ul>
+</section>
+
+<!-- ════ 8 · VALORACIÓN ════ -->
+<section class="panel" id="p-valoracion" role="tabpanel" data-acc="cyan">
+  <div class="sechead rv">
+    <div class="kicker">Sección 09 · Precio y método</div>
+    <h2>Cómo <em>valorar</em> una empresa</h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">No existe una fórmula universal. La valoración depende del sector, tamaño, rentabilidad, deuda, riesgo y capacidad de generar caja.</p>
+
+  <h3 class="sub rv"><span class="n">9.1</span>Método basado en EBITDA</h3>
+  <p class="rv">Un método habitual consiste en aplicar un múltiplo al <strong>EBITDA normalizado</strong>. Ejemplo hipotético:</p>
+  <div class="ledger rv">
+    <div class="lrow"><div class="lact">EBITDA normalizado</div><div class="lprice">100.000 €</div></div>
+    <div class="lrow"><div class="lact">Múltiplo hipotético</div><div class="lprice">× 3</div></div>
+    <div class="lrow"><div class="lact">Valor de empresa</div><div class="lprice">300.000 €</div></div>
+  </div>
+  <p class="note rv">Este ejemplo no representa una cotización de mercado ni un múltiplo recomendado. El múltiplo real debe justificarse con operaciones comparables y características concretas de la empresa.</p>
+
+  <div class="calc rv" id="calcVal">
+    <h4>◆ Simulador didáctico · EBITDA × múltiplo</h4>
+    <div class="crow"><div class="cl"><label for="vEbitda">EBITDA normalizado</label><output id="oEbitda">100.000 €</output></div>
+      <input type="range" id="vEbitda" min="0" max="500000" step="5000" value="100000"></div>
+    <div class="crow"><div class="cl"><label for="vMult">Múltiplo hipotético</label><output id="oMult">× 3</output></div>
+      <input type="range" id="vMult" min="1" max="8" step="0.5" value="3"></div>
+    <div class="crow"><div class="cl"><label for="vDeuda">Deuda financiera</label><output id="oDeuda">60.000 €</output></div>
+      <input type="range" id="vDeuda" min="0" max="300000" step="5000" value="60000"></div>
+    <div class="crow"><div class="cl"><label for="vCaja">Caja disponible</label><output id="oCaja">20.000 €</output></div>
+      <input type="range" id="vCaja" min="0" max="200000" step="5000" value="20000"></div>
+    <div class="vgrid">
+      <div class="vcell"><div class="vl">Valor de empresa (EV)</div><div class="vv" id="vEV">300.000 €</div></div>
+      <div class="vcell"><div class="vl">≈ Valor de participaciones</div><div class="vv" id="vEQ">260.000 €</div></div>
+    </div>
+    <div class="calcbtos"><button class="btn btn-sm" id="vReset">↺ Reiniciar ejemplo</button></div>
+    <p class="note" style="margin:12px 0 0">Simulación hipotética basada en el ejemplo del documento: EV − deuda + caja, antes de otros ajustes. No es una cotización ni una recomendación.</p>
+  </div>
+
+  <h3 class="sub rv"><span class="n">9.2</span>Valor de empresa y valor de las participaciones</h3>
+  <p class="rv"><strong>No son lo mismo.</strong> El valor de empresa suele representar el valor del negocio operativo antes de considerar determinados ajustes financieros.</p>
+  <p class="rv">Para llegar al valor de las participaciones hay que considerar, entre otros elementos:</p>
+  <ul class="ticks violet rv"><li>Deuda financiera.</li><li>Caja disponible.</li><li>Capital circulante.</li><li>Ajustes pactados.</li><li>Otros pasivos relevantes.</li></ul>
+  <p class="rv">Una empresa anunciada por 300.000 euros puede requerir una inversión total bastante superior.</p>
+
+  <h3 class="sub rv"><span class="n">9.3</span>No confundir activos con rentabilidad</h3>
+  <p class="rv">Una fábrica puede tener maquinaria valorada en 500.000 euros y no generar beneficios suficientes.</p>
+  <p class="rv">Una empresa con pocos activos físicos puede tener una cartera de contratos extraordinariamente valiosa.</p>
+  <div class="quote rv">La maquinaria no paga las facturas por sí sola.</div>
+</section>
+
+<!-- ════ 9 · FORMAS DE COMPRA ════ -->
+<section class="panel" id="p-compra" role="tabpanel" data-acc="blue">
+  <div class="sechead rv">
+    <div class="kicker">Sección 10 · Estructuración</div>
+    <h2>Formas de <em>adquirir</em> el negocio</h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">No siempre es necesario pagar todo el precio de compra al principio. Existen distintas estructuras que pueden negociarse.</p>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.1</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Compra directa</b>
+    <p>Se compra la totalidad de la empresa o del negocio.</p>
+    <p><strong style="color:var(--green)">Ventaja:</strong> control desde el principio.</p>
+    <p style="margin-bottom:0"><strong style="color:var(--red)">Desventaja:</strong> necesidad de capital y exposición al riesgo.</p></div>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.2</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Compra de participaciones sociales</b>
+    <p>Se adquieren las participaciones de una sociedad existente.</p>
+    <p><strong style="color:var(--green)">Ventaja:</strong> puede mantenerse la continuidad de la sociedad, sus contratos y estructura.</p>
+    <p><strong style="color:var(--red)">Riesgo:</strong> se adquiere una sociedad con su historial, obligaciones y posibles contingencias.</p>
+    <p class="note" style="margin-bottom:0">Necesita una auditoría jurídica, fiscal, laboral y financiera especialmente cuidadosa.</p></div>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.3</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Compra de activos y unidad productiva</b>
+    <p>Se compran determinados activos, instalaciones, maquinaria, existencias y, cuando proceda, elementos de la actividad empresarial.</p>
+    <p><strong style="color:var(--green)">Ventaja:</strong> permite delimitar mejor qué se adquiere.</p>
+    <p style="margin-bottom:0"><strong style="color:var(--red)">Riesgo:</strong> contratos, licencias, relaciones laborales y otras obligaciones pueden tener reglas de transmisión específicas.</p></div>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.4</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Pago aplazado</b>
+    <p>El vendedor acepta cobrar una parte del precio posteriormente.</p>
+    <p>Puede permitir que la propia empresa genere parte de los recursos necesarios para pagar la adquisición.</p>
+    <p class="note" style="margin-bottom:0">Debe negociarse con garantías, condiciones claras y asesoramiento jurídico.</p></div>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.5</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Earn-out</b>
+    <p>Una parte del precio depende de resultados futuros. Ejemplo:</p>
+    <div class="ledger" style="margin:8px 0">
+      <div class="lrow"><div class="lact">Precio inicial</div><div class="lprice">150.000 €</div></div>
+      <div class="lrow"><div class="lact">Pago adicional máximo</div><div class="lprice">50.000 €</div></div>
+    </div>
+    <p>Condicionado a conservar clientes y alcanzar determinados resultados.</p>
+    <p style="margin-bottom:0">Puede alinear los intereses del vendedor y comprador durante la transición.</p></div>
+  <div class="card rv"><span class="rkn" style="color:var(--blue);font-family:var(--fm);font-size:10px;letter-spacing:1.5px">10.6</span><b style="display:block;font-size:15.5px;margin:3px 0 6px">Compra progresiva</b>
+    <p>Se puede negociar una entrada inicial con adquisición posterior de participaciones.</p>
+    <p style="margin-bottom:0">Es especialmente útil cuando el propietario quiere retirarse gradualmente y el comprador necesita conocer el negocio.</p></div>
+  <div class="quote rv">No existe una fórmula que funcione siempre. La estructura debe responder a los riesgos y a la capacidad financiera de ambas partes.</div>
+</section>
+
+<!-- ════ 10 · IA ════ -->
+<section class="panel" id="p-ia" role="tabpanel" data-acc="violet">
+  <div class="sechead rv">
+    <div class="kicker">Sección 11 · Modernización</div>
+    <h2>El papel de la <em>inteligencia artificial</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <div class="card rv" style="display:flex;gap:14px;align-items:center">
+    <svg viewBox="0 0 240 270" style="width:64px;height:72px;flex:none" aria-hidden="true"><use href="#markGeo"/></svg>
+    <p style="margin:0;font-size:13.5px">Una de las oportunidades más interesantes consiste en modernizar empresas tradicionales mediante IA.</p>
+  </div>
+  <div class="quote qviolet rv">No se trata de convertir una lavandería en una empresa tecnológica. Se trata de utilizar tecnología para que una lavandería funcione mejor.</div>
+
+  <h3 class="sub rv"><span class="n">11.1</span>Automatización comercial</h3>
+  <div class="chips rv"><span class="chip c-violet">Atención inicial 24 horas</span><span class="chip c-violet">Clasificación de solicitudes</span><span class="chip c-violet">Presupuestos preliminares</span><span class="chip c-violet">Seguimiento de clientes</span><span class="chip c-violet">Recordatorios de mantenimiento</span><span class="chip c-violet">Recuperación de clientes inactivos</span><span class="chip c-violet">Gestión de consultas</span></div>
+
+  <h3 class="sub rv"><span class="n">11.2</span>Automatización administrativa</h3>
+  <div class="chips rv"><span class="chip c-blue">Clasificación de facturas</span><span class="chip c-blue">Extracción de datos</span><span class="chip c-blue">Preparación de informes</span><span class="chip c-blue">Seguimiento de cobros</span><span class="chip c-blue">Gestión documental</span><span class="chip c-blue">Control de vencimientos</span></div>
+  <p class="note rv">La emisión de documentos fiscales y los registros contables deben mantener los controles legales y humanos necesarios.</p>
+
+  <h3 class="sub rv"><span class="n">11.3</span>Automatización operativa</h3>
+  <p class="rv">Según la actividad:</p>
+  <div class="chips rv"><span class="chip c-cyan">Predicción de averías</span><span class="chip c-cyan">Control de inventario</span><span class="chip c-cyan">Optimización de rutas</span><span class="chip c-cyan">Planificación de trabajos</span><span class="chip c-cyan">Análisis de consumos</span><span class="chip c-cyan">Programación de mantenimiento</span></div>
+
+  <h3 class="sub rv"><span class="n">11.4</span>La empresa tradicional puede tener una ventaja</h3>
+  <p class="rv">Una startup necesita construir desde cero:</p>
+  <div class="chips rv"><span class="chip c-red">Marca</span><span class="chip c-red">Clientes</span><span class="chip c-red">Reputación</span><span class="chip c-red">Canales comerciales</span><span class="chip c-red">Procesos</span><span class="chip c-red">Proveedores</span></div>
+  <p class="rv"><strong>Una empresa consolidada ya dispone de buena parte de estos activos.</strong></p>
+  <p class="rv">La IA puede ayudar a reducir costes y aumentar capacidad sin necesidad de reconstruir todo desde el principio.</p>
+  <p class="note rv">Pero no debe confundirse automatización con eliminación de personal. En sectores técnicos, la ejecución física, las inspecciones y las responsabilidades profesionales siguen requiriendo personas.</p>
+</section>
+
+<!-- ════ 11 · RIESGOS ════ -->
+<section class="panel" id="p-riesgos" role="tabpanel" data-acc="red">
+  <div class="sechead rv">
+    <div class="kicker">Sección 12 · Alertas rojas</div>
+    <h2>Los riesgos que pueden <em>arruinar una adquisición</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <div class="card riskcard rv"><span class="rkn">12.1 · ALERTA</span><b class="rt">Contabilidad maquillada</b><p>Los resultados declarados no siempre reflejan la realidad económica. Hay que contrastar cuentas, bancos, impuestos, facturas y movimientos.</p></div>
+  <div class="card riskcard rv"><span class="rkn">12.2 · ALERTA</span><b class="rt">Clientes que desaparecen con el fundador</b><p>Si las relaciones comerciales dependen exclusivamente del propietario, la transición puede destruir valor.</p></div>
+  <div class="card riskcard rv"><span class="rkn">12.3 · ALERTA</span><b class="rt">Maquinaria obsoleta</b><p>Una empresa puede parecer barata porque necesita inversiones importantes.</p></div>
+  <div class="card riskcard rv"><span class="rkn">12.4 · ALERTA</span><b class="rt">Personal imprescindible</b><p>Puede haber trabajadores que concentran conocimientos fundamentales. Hay que conocer su situación, antigüedad, funciones y voluntad de permanencia.</p></div>
+  <div class="card riskcard rv"><span class="rkn">12.5 · ALERTA</span><b class="rt">Licencias y autorizaciones</b><p>No debe suponerse que las licencias se transmiten automáticamente con la compra. Cada actividad tiene sus propias exigencias.</p></div>
+  <div class="card riskcard rv"><span class="rkn">12.6 · ALERTA</span><b class="rt">Pasivos ocultos</b>
+    <ul class="ticks red" style="margin-bottom:0"><li>Deudas tributarias.</li><li>Seguridad Social.</li><li>Reclamaciones laborales.</li><li>Litigios.</li><li>Contaminación.</li><li>Incumplimientos normativos.</li><li>Contratos desfavorables.</li></ul></div>
+  <div class="card riskcard rv"><span class="rkn">12.7 · ALERTA</span><b class="rt">Precio excesivo</b><p>El vendedor puede valorar su empresa por el esfuerzo de toda una vida. El comprador debe valorarla por su capacidad futura de generar beneficios y caja.</p></div>
+</section>
+
+<!-- ════ 12 · TERRITORIO ════ -->
+<section class="panel" id="p-territorio" role="tabpanel" data-acc="green">
+  <div class="sechead rv">
+    <div class="kicker">Sección 13 · Geografía</div>
+    <h2>Estrategia de investigación: <em>España y Comunidad Valenciana</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">La búsqueda puede organizarse en dos niveles.</p>
+  <div class="card terr rv" style="--acc:var(--cyan)">
+    <span class="tlab">Nivel A</span><b class="tname">Comunidad Valenciana</b>
+    <p><strong>Ventajas:</strong></p>
+    <ul class="ticks"><li>Proximidad geográfica.</li><li>Posibilidad de visitar instalaciones.</li><li>Contacto directo con propietarios.</li><li>Conocimiento del tejido empresarial.</li><li>Menores desplazamientos durante la investigación.</li></ul>
+    <p><strong>Zonas de interés:</strong></p>
+    <div class="chips" style="margin-bottom:0"><span class="chip c-cyan">Valencia y área metropolitana</span><span class="chip c-cyan">Castellón y sus polígonos industriales</span><span class="chip c-cyan">Alicante y su tejido comercial e industrial</span><span class="chip c-cyan">Municipios industriales del interior</span><span class="chip c-cyan">Zonas agrícolas con empresas auxiliares</span></div>
+  </div>
+  <div class="card terr rv" style="--acc:var(--violet)">
+    <span class="tlab">Nivel B</span><b class="tname">Resto de España</b>
+    <p>Ampliar la búsqueda cuando aparezca una actividad especialmente interesante.</p>
+    <p>No conviene limitar una buena oportunidad por razones geográficas si existe una estructura que permite gestionarla a distancia.</p>
+    <p style="margin-bottom:0">Sin embargo, hay que tener en cuenta que una empresa de mantenimiento local necesita cobertura operativa real. <strong>No se puede dirigir una actividad de urgencias a cientos de kilómetros sin una estructura local fiable.</strong></p>
+  </div>
+</section>
+
+<!-- ════ 13 · PUNTUACIÓN ════ -->
+<section class="panel" id="p-puntuacion" role="tabpanel" data-acc="gold">
+  <div class="sechead rv">
+    <div class="kicker">Sección 14 · Scorecard interactivo</div>
+    <h2>Criterios para clasificar las <em>oportunidades</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="rv">Propongo una puntuación interna de <strong>100 puntos</strong>. Mueve cada criterio para puntuar una oportunidad real:</p>
+  <div class="calc rv" id="calcScore">
+    <h4>◆ Evaluador de oportunidad · máx. 100 puntos</h4>
+    <div id="scoreRows"></div>
+    <div class="stackbar" id="stackbar" aria-hidden="true"></div>
+    <div class="calcout">
+      <div class="big"><span id="scoreTotal">74</span><small> / 100</small></div>
+      <div class="verdict v-amber" id="scoreVerdict">Merece negociación e investigación</div>
+    </div>
+    <div class="calcbtos">
+      <button class="btn btn-sm" id="scoreReset">↺ Reiniciar ejemplo</button>
+      <button class="btn btn-sm btn-dim" id="scoreZero">Poner todo a 0</button>
+    </div>
+  </div>
+  <p class="rv"><strong>Interpretación orientativa:</strong></p>
+  <ul class="ticks rv" style="list-style:none">
+    <li style="padding-left:0"><span class="verdict v-green" style="margin-right:8px">85–100</span> Oportunidad muy interesante para auditoría.</li>
+    <li style="padding-left:0;margin-top:8px"><span class="verdict v-amber" style="margin-right:8px">70–84</span> Oportunidad que merece negociación e investigación.</li>
+    <li style="padding-left:0;margin-top:8px"><span class="verdict v-blue" style="margin-right:8px">55–69</span> Necesita mejoras o condiciones especiales.</li>
+    <li style="padding-left:0;margin-top:8px"><span class="verdict v-red" style="margin-right:8px">&lt; 55</span> Descartar provisionalmente.</li>
+  </ul>
+  <p class="note rv">La puntuación no sustituye la auditoría. Una deuda grave o una contingencia legal puede justificar el descarte aunque la puntuación sea alta.</p>
+</section>
+
+<!-- ════ 14 · PLAN ════ -->
+<section class="panel" id="p-plan" role="tabpanel" data-acc="cyan">
+  <div class="sechead rv">
+    <div class="kicker">Sección 15 · Hoja de ruta</div>
+    <h2>Plan de trabajo: de la investigación <em>a la adquisición</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <ol class="timeline rv">
+    <li><span class="tn">1</span><b class="tt">Fase 1 · Selección de sectores</b><p>Elegir tres actividades iniciales.</p><p class="note" style="margin:0">No investigar veinte sectores simultáneamente.</p></li>
+    <li><span class="tn">2</span><b class="tt">Fase 2 · Localización</b><p>Construir una base de empresas con:</p>
+      <div class="chips"><span class="chip">Nombre</span><span class="chip">Actividad</span><span class="chip">Municipio</span><span class="chip">Antigüedad aproximada</span><span class="chip">Número de empleados</span><span class="chip">Web</span><span class="chip">Teléfono</span><span class="chip">Propietario, si consta públicamente</span><span class="chip">Posibles señales de sucesión</span></div></li>
+    <li><span class="tn">3</span><b class="tt">Fase 3 · Primer contacto</b><p>Presentar una propuesta de continuidad empresarial.</p><p class="note" style="margin:0">No comenzar ofreciendo un precio.</p></li>
+    <li><span class="tn">4</span><b class="tt">Fase 4 · Primera evaluación</b><p>Solicitar información básica:</p>
+      <ul class="ticks"><li>Actividad.</li><li>Antigüedad.</li><li>Motivo de transmisión.</li><li>Facturación aproximada.</li><li>Número de empleados.</li><li>Situación de la propiedad.</li><li>Expectativas económicas.</li></ul></li>
+    <li><span class="tn">5</span><b class="tt">Fase 5 · Acuerdo de confidencialidad</b><p>Cuando se vaya a compartir información sensible, establecer un acuerdo de confidencialidad adecuado.</p></li>
+    <li><span class="tn">6</span><b class="tt">Fase 6 · Auditoría</b><p>Revisión financiera, fiscal, laboral, jurídica, técnica y comercial.</p></li>
+    <li><span class="tn">7</span><b class="tt">Fase 7 · Valoración</b><p>Determinar el precio máximo justificable.</p></li>
+    <li><span class="tn">8</span><b class="tt">Fase 8 · Negociación</b><p>Estudiar compra directa, pagos aplazados, adquisición progresiva o estructuras alternativas.</p></li>
+    <li><span class="tn">9</span><b class="tt">Fase 9 · Transición</b><p>El propietario debe colaborar durante un periodo pactado. Hay que transferir:</p>
+      <ul class="ticks violet"><li>Relaciones comerciales.</li><li>Conocimiento técnico.</li><li>Procedimientos.</li><li>Contactos de proveedores.</li><li>Información operativa.</li><li>Gestión cotidiana.</li></ul></li>
+    <li><span class="tn">10</span><b class="tt">Fase 10 · Modernización</b><p>Una vez estabilizada la actividad:</p>
+      <ul class="ticks green"><li>Digitalizar.</li><li>Automatizar.</li><li>Mejorar procesos.</li><li>Optimizar costes.</li><li>Diversificar clientes.</li><li>Profesionalizar la dirección.</li></ul>
+      <p class="note" style="margin:0">No conviene cambiarlo todo el primer día.</p></li>
+  </ol>
+</section>
+
+<!-- ════ 15 · PREGUNTAS ════ -->
+<section class="panel" id="p-preguntas" role="tabpanel" data-acc="blue">
+  <div class="sechead rv">
+    <div class="kicker">Sección 16 · FAQ por niveles</div>
+    <h2>33 preguntas y respuestas <em>ordenadas por dificultad</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <div class="toolrow">
+    <button class="btn btn-acid" id="qaExpand">+ Desplegar todas las respuestas</button>
+    <button class="btn btn-dim" id="qaCollapse">- Plegar todas las respuestas</button>
+  </div>
+  <div id="qaList"></div>
+</section>
+
+<!-- ════ 16 · CONCLUSIÓN ════ -->
+<section class="panel" id="p-conclusion" role="tabpanel" data-acc="green">
+  <div class="sechead rv">
+    <div class="kicker">Sección 17 · Síntesis</div>
+    <h2>Conclusión <em>estratégica</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <p class="lead rv">La oportunidad no consiste en comprar empresas viejas.</p>
+  <p class="rv">Consiste en identificar empresas que tienen un negocio válido, pero necesitan una <strong>nueva generación de gestión</strong>.</p>
+  <p class="rv">El propietario puede haber construido una actividad excelente sin haber desarrollado una estructura empresarial moderna. Puede tener clientes, maquinaria, experiencia y reputación, pero carecer de:</p>
+  <div class="chips rv"><span class="chip c-red">Automatización</span><span class="chip c-red">Marketing profesional</span><span class="chip c-red">Gestión comercial</span><span class="chip c-red">Control de indicadores</span><span class="chip c-red">Procesos documentados</span><span class="chip c-red">Planificación</span><span class="chip c-red">Dirección profesionalizada</span></div>
+  <p class="rv"><strong>Ahí existe una posibilidad de creación de valor.</strong></p>
+  <p class="rv">La adquisición no debería buscar únicamente un descuento sobre el precio solicitado. Debería buscar una empresa cuyo potencial pueda desarrollarse mejor con una nueva dirección.</p>
+  <p class="rv"><strong>La estrategia más inteligente podría ser:</strong></p>
+  <ol class="timeline rv">
+    <li><span class="tn">1</span><b class="tt">Encontrar una empresa consolidada.</b></li>
+    <li><span class="tn">2</span><b class="tt">Comprobar su rentabilidad real.</b></li>
+    <li><span class="tn">3</span><b class="tt">Negociar una adquisición razonable.</b></li>
+    <li><span class="tn">4</span><b class="tt">Conservar los activos y conocimientos que funcionan.</b></li>
+    <li><span class="tn">5</span><b class="tt">Profesionalizar la gestión.</b></li>
+    <li><span class="tn">6</span><b class="tt">Incorporar tecnología e IA.</b></li>
+    <li><span class="tn">7</span><b class="tt">Mejorar la rentabilidad.</b></li>
+    <li><span class="tn">8</span><b class="tt">Reducir la dependencia del propietario.</b></li>
+    <li><span class="tn">9</span><b class="tt">Construir una empresa capaz de funcionar con autonomía.</b></li>
+  </ol>
+  <div class="quote qgreen big rv" style="margin-top:24px">No se trata de inventar una necesidad. Se trata de encontrar una necesidad que ya tiene clientes y una empresa que ya sabe resolverla.</div>
+</section>
+
+<!-- ════ 17 · FUENTES ════ -->
+<section class="panel" id="p-fuentes" role="tabpanel" data-acc="blue">
+  <div class="sechead rv">
+    <div class="kicker">Sección 18 · Bibliografía</div>
+    <h2>Fuentes y recursos para <em>continuar investigando</em></h2>
+    <div class="headrule"></div>
+  </div>
+  <h3 class="sub rv"><span class="n">18.1</span>Estudios e informes</h3>
+  <div id="srcStudies"></div>
+  <h3 class="sub rv"><span class="n">18.2</span>Plataformas de búsqueda</h3>
+  <div id="srcPlatforms"></div>
+</section>
+
+<!-- ════ 18 · CRÉDITOS ════ -->
+<section class="panel" id="p-creditos" role="tabpanel" data-acc="cyan">
+  <div class="sechead rv">
+    <div class="kicker">Sección final · Créditos</div>
+    <h2>Créditos</h2>
+    <div class="headrule"></div>
+  </div>
+  <div class="card creditcard rv">
+    <div class="logoHalo" style="margin-bottom:6px">
+      <svg viewBox="0 0 240 400" style="width:152px;height:auto;position:relative" role="img" aria-label="Logo IA Tutoriales"><use href="#markGeo"/><use href="#wordGeo" transform="translate(0,276)"/></svg>
+    </div>
+    <div class="crole" style="margin-top:14px">Autor</div>
+    <div class="cname">Rubén Sbarsky</div>
+    <div class="cmeta">
+      <span class="cm">Fecha 📆: 17/11/2026</span>
+      <span class="cm">Hora 🕰: 07:55:51</span>
+    </div>
+  </div>
+  <div class="card rv">
+    <div class="fieldlab fl-act">Documento</div>
+    <p style="margin-bottom:0">Investigación estratégica sobre negocios tradicionales, oportunidades de adquisición empresarial y relevo generacional en España.</p>
+  </div>
+  <div class="card rv">
+    <div class="fieldlab fl-cli">Enfoque</div>
+    <p style="margin-bottom:0">Identificar actividades económicas consolidadas que puedan continuar, profesionalizarse y modernizarse mediante una nueva dirección y tecnologías de inteligencia artificial.</p>
+  </div>
+  <div class="fieldlab fl-mod rv" style="margin-top:20px">Principio rector</div>
+  <div class="quote qviolet big rv">No buscamos negocios de moda. Buscamos negocios necesarios, con clientes reales, capacidad de generar riqueza y posibilidades de continuar creciendo.</div>
+  <div class="rv" style="text-align:center;margin-top:20px">
+    <button class="btn btn-primary" data-goto="0">⌂ Volver a Inicio</button>
+  </div>
+</section>
+
+</main>
+
+<footer id="pager" aria-label="Navegación entre secciones">
+  <button class="pbtn pprev" id="pPrev"><small>← Anterior</small><b id="pPrevName">—</b></button>
+  <div id="pcount">01/19<small>SECCIÓN</small></div>
+  <button class="pbtn pnext" id="pNext"><small id="pNextLab">Siguiente →</small><b id="pNextName">—</b></button>
+</footer>
+
+<button class="fab" id="fabHome" aria-label="Ir a Inicio (botón arrastrable)" title="Ir a Inicio · arrástrame donde quieras">
+  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+  <span>INICIO</span>
+</button>
+<button class="fab violet" id="fabTop" aria-label="Subir al comienzo de esta pestaña (botón arrastrable)" title="Arriba · arrástrame donde quieras">
+  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M5 12l7-7 7 7"/></svg>
+  <span>ARRIBA</span>
+</button>
+
+<script>
+'use strict';
+/* ═══════════ DATOS ═══════════ */
+const TABS=[
+ {id:'inicio',name:'Inicio',desc:'La tesis: riqueza en silencio'},
+ {id:'datos',name:'Datos y cifras',desc:'El relevo generacional en números'},
+ {id:'perfil',name:'Qué buscamos',desc:'12 rasgos del negocio ideal'},
+ {id:'sectores',name:'Los 20 sectores',desc:'Mapa completo de actividades'},
+ {id:'prioridades',name:'Top 5 prioridades',desc:'Por dónde empezaría a investigar'},
+ {id:'valor',name:'Valor oculto',desc:'Lo que no aparece en el inventario'},
+ {id:'buscar',name:'Dónde buscar',desc:'Canales para encontrar empresas'},
+ {id:'rentabilidad',name:'Rentabilidad real',desc:'Facturar no es ganar'},
+ {id:'valoracion',name:'Valoración',desc:'EBITDA, múltiplos y simulador'},
+ {id:'compra',name:'Formas de compra',desc:'Seis estructuras de adquisición'},
+ {id:'ia',name:'IA y modernización',desc:'Tecnología sin destruir lo que funciona'},
+ {id:'riesgos',name:'Riesgos',desc:'Lo que puede arruinar la operación'},
+ {id:'territorio',name:'Estrategia territorial',desc:'C. Valenciana y resto de España'},
+ {id:'puntuacion',name:'Puntuación 100',desc:'Scorecard interactivo de oportunidades'},
+ {id:'plan',name:'Plan en 10 fases',desc:'De la investigación a la adquisición'},
+ {id:'preguntas',name:'33 preguntas',desc:'FAQ por niveles con respuestas'},
+ {id:'conclusion',name:'Conclusión',desc:'La estrategia en 9 pasos'},
+ {id:'fuentes',name:'Fuentes',desc:'Informes y plataformas citadas'},
+ {id:'creditos',name:'Créditos',desc:'Autor, fecha y principio rector'}
+];
+const LINKS={
+ pyme2026:{url:'https://economistas.es/wp-content/uploads/2026/11/Informe-Pyme-2026-Continuidad.pdf',title:'Informe Pyme 2026 – Continuidad',meta:'FAEDPYME y Consejo General de Economistas · PDF',kind:'pdf'},
+ cincodias:{url:'https://cincodias.elpais.com/extras/pymes/2026-10-08/se-vende-empresa-motivo-falta-de-relevo-generacional.html',title:'Se vende empresa. Motivo: falta de relevo generacional',meta:'Cinco Días · 8 de octubre de 2026',kind:'news'},
+ mitess:{url:'https://www.mites.gob.es/EconomiaSocial/resources/documentos/noticias/202602-Informe-democracia-trabajo.pdf',title:'Informe sobre democracia en el trabajo – 2026',meta:'Ministerio de Trabajo y Economía Social · PDF',kind:'pdf'},
+ ciae:{url:'https://www.autonomos-ciae.es/wp-content/uploads/2026/10/Guia-Relevo-Generacional-CIAE.pdf',title:'Guía práctica del relevo generacional en el trabajo autónomo',meta:'CIAE · octubre de 2026 · PDF',kind:'pdf'},
+ eldiario:{url:'https://www.eldiario.es/economia/relevo-generacional-riesgo-economico-empresas-fracasan-sucesion-no-negocio_1_13256274.html',title:'El relevo generacional como riesgo económico',meta:'ElDiario.es · junio de 2026',kind:'news'},
+ tupyme:{url:'https://tupyme.es/',title:'Tupyme',meta:'Portal de compraventa de pymes',kind:'web'},
+ compramos:{url:'https://compramostupyme.com/',title:'Compramos tu Pyme',meta:'Plataforma de adquisición de empresas',kind:'web'},
+ bfs:{url:'https://www.businessesforsale.com/',title:'BusinessesForSale',meta:'Marketplace internacional de negocios en venta',kind:'web'},
+ traspaso:{url:'https://www.traspaso.com/',title:'Traspaso',meta:'Portal de traspasos y negocios',kind:'web'}
+};
+const ICONS={
+ pdf:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6M9 11h2"/></svg>',
+ news:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M12 6h6M12 10h6M12 14h6M12 18h6"/></svg>',
+ web:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>',
+ ext:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4L10 14"/><path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"/></svg>',
+ chev:'<svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+};
+const SECTORS=[
+ {n:'4.1',name:'Lavanderías industriales',f:[
+  {t:'Actividad',k:'act',chips:['Lavado','Secado','Planchado','Clasificación','Distribución de textiles']},
+  {t:'Clientes potenciales',k:'cli',chips:['Hoteles','Residencias de mayores','Hospitales','Restaurantes','Gimnasios','Empresas con uniformes','Alojamientos turísticos']},
+  {t:'¿Por qué interesa?',k:'why',text:['Los clientes necesitan el servicio continuamente. Las relaciones comerciales pueden prolongarse durante años y las instalaciones constituyen una barrera de entrada.']},
+  {t:'Riesgos',k:'risk',list:['Elevado consumo de agua y energía.','Maquinaria costosa.','Necesidad de mantenimiento.','Logística y transporte.','Concentración de clientes.']},
+  {t:'Potencial de modernización',k:'mod',chips:['Optimización de rutas','Control automatizado de pedidos','Sensores de maquinaria','Predicción de averías','Gestión inteligente de consumos']}]},
+ {n:'4.2',name:'Refrigeración comercial e industrial',f:[
+  {t:'Actividad',k:'act',text:['Instalación, reparación y mantenimiento de sistemas frigoríficos.']},
+  {t:'Clientes potenciales',k:'cli',chips:['Supermercados','Restaurantes','Hoteles','Industrias alimentarias','Almacenes frigoríficos','Distribuidores de alimentación','Comercios']},
+  {t:'¿Por qué interesa?',k:'why',text:['La refrigeración es una infraestructura crítica. Una avería puede provocar pérdidas económicas importantes.','Los clientes necesitan reparaciones y mantenimiento periódico.','Es especialmente interesante encontrar empresas con contratos de mantenimiento, técnicos experimentados y una cartera de clientes diversificada.']},
+  {t:'Riesgos',k:'risk',list:['Dependencia de técnicos cualificados.','Responsabilidades técnicas y reglamentarias.','Disponibilidad de repuestos.','Servicio de urgencias.','Costes de vehículos y desplazamientos.']},
+  {t:'Potencial de modernización',k:'mod',chips:['Diagnóstico asistido por IA','Mantenimiento predictivo','Gestión automática de avisos','Inventario inteligente','Atención comercial permanente']}]},
+ {n:'4.3',name:'Control de plagas',f:[
+  {t:'Actividad',k:'act',chips:['Desinsectación','Desratización','Desinfección','Prevención']},
+  {t:'Clientes potenciales',k:'cli',chips:['Hostelería','Industria alimentaria','Comunidades de propietarios','Almacenes','Comercios','Instalaciones públicas','Empresas logísticas']},
+  {t:'¿Por qué interesa?',k:'why',text:['El problema no desaparece definitivamente después de una intervención. Los clientes necesitan prevención, inspecciones y tratamientos periódicos.']},
+  {t:'Riesgos',k:'risk',list:['Licencias y requisitos profesionales.','Productos regulados.','Responsabilidad sanitaria.','Personal cualificado.']},
+  {t:'Potencial tecnológico',k:'mod',chips:['Programación automática de inspecciones','Historial digital de instalaciones','Recordatorios de renovación','Rutas optimizadas','Informes automáticos para clientes']}]},
+ {n:'4.4',name:'Fabricación y distribución de hielo',f:[
+  {t:'Clientes',k:'cli',chips:['Hostelería','Pescaderías','Supermercados','Distribuidores','Eventos','Industria alimentaria']},
+  {t:'Ventaja',k:'why',text:['Producto necesario para determinados clientes y temporadas.']},
+  {t:'Riesgos',k:'risk',text:['Electricidad, maquinaria, transporte, estacionalidad y competencia por precio.']}]},
+ {n:'4.5',name:'Tratamiento y mantenimiento de agua',f:[
+  {t:'Actividad',k:'act',chips:['Descalcificadores','Ósmosis inversa','Filtración','Tratamiento de piscinas','Depósitos','Sistemas industriales']},
+  {t:'Clientes',k:'cli',chips:['Hoteles','Restaurantes','Industrias','Comunidades','Viviendas','Instalaciones agrícolas']},
+  {t:'Interés',k:'why',text:['Mantenimiento, consumibles, sustitución de filtros y contratos de revisión.']}]},
+ {n:'4.6',name:'Mantenimiento de ascensores',f:[
+  {t:'Actividad',k:'act',text:['Mantenimiento preventivo, reparación y asistencia técnica.']},
+  {t:'Ventajas',k:'why',list:['Necesidad continuada.','Contratos recurrentes.','Cartera de comunidades.','Barreras técnicas y regulatorias.']},
+  {t:'Riesgos',k:'risk',list:['Habilitaciones.','Responsabilidad por seguridad.','Personal especializado.','Necesidad de cobertura de incidencias.']}]},
+ {n:'4.7',name:'Distribución de máquinas vending',f:[
+  {t:'Actividad',k:'act',text:['Instalación y explotación de máquinas expendedoras.']},
+  {t:'Ubicaciones',k:'cli',chips:['Empresas','Hospitales','Fábricas','Centros educativos','Centros deportivos']},
+  {t:'El verdadero activo',k:'why',text:['El verdadero activo no es solamente la máquina: es el derecho o acuerdo comercial para explotar una ubicación rentable.']},
+  {t:'Riesgos',k:'risk',text:['Reposición, vandalismo, caducidades y pérdida de ubicaciones.']}]},
+ {n:'4.8',name:'Mecanizado y metalurgia',f:[
+  {t:'Actividad',k:'act',chips:['Torneado','Fresado','Corte','Soldadura','Fabricación de piezas','Reparaciones industriales']},
+  {t:'Interés',k:'why',text:['Especialización técnica y relaciones comerciales con otras industrias.']},
+  {t:'Riesgos',k:'risk',text:['Maquinaria obsoleta, inversiones, personal cualificado y dependencia de determinados clientes.']}]},
+ {n:'4.9',name:'Reparación de maquinaria de hostelería',f:[
+  {t:'Actividad',k:'act',chips:['Lavavajillas industriales','Hornos','Cocinas profesionales','Freidoras','Cámaras frigoríficas','Equipamiento de restauración']},
+  {t:'Interés',k:'why',text:['Las averías afectan directamente a la actividad del cliente.','Puede combinar reparaciones, mantenimiento y venta de repuestos.']}]},
+ {n:'4.10',name:'Protección contra incendios',f:[
+  {t:'Actividad',k:'act',chips:['Extintores','Sistemas de detección','Alarmas','Rociadores','Revisiones','Instalaciones de protección']},
+  {t:'Interés',k:'why',text:['Obligaciones de mantenimiento y revisiones periódicas.']},
+  {t:'Riesgos',k:'risk',text:['Requisitos reglamentarios, habilitación, responsabilidad técnica y competencia.']}]},
+ {n:'4.11',name:'Sistemas de riego agrícola',f:[
+  {t:'Actividad',k:'act',chips:['Bombas','Automatización de riego','Filtrado','Tuberías','Goteo','Reparaciones']},
+  {t:'Clientes',k:'cli',text:['Agricultores, cooperativas y comunidades de regantes.']},
+  {t:'Interés',k:'why',text:['Mantenimiento y necesidad de eficiencia hídrica.']}]},
+ {n:'4.12',name:'Limpieza de fosas sépticas y redes',f:[
+  {t:'Actividad',k:'act',chips:['Vaciado de fosas','Limpieza de colectores','Desatascos','Inspección de tuberías','Gestión de residuos']},
+  {t:'Clientes',k:'cli',text:['Viviendas rurales, urbanizaciones, industrias y comunidades.']},
+  {t:'Interés',k:'why',text:['Servicios necesarios, especializados y con posibilidad de contratos.']},
+  {t:'Riesgos',k:'risk',text:['Vehículos especializados, permisos ambientales y gestión de residuos.']}]},
+ {n:'4.13',name:'Fabricación de embalajes',f:[
+  {t:'Actividad',k:'act',chips:['Cajas de cartón','Embalajes industriales','Protección de mercancías','Envases personalizados']},
+  {t:'Clientes',k:'cli',text:['Fabricantes, distribuidores y comercio electrónico.']},
+  {t:'Interés',k:'why',text:['Suministro recurrente a empresas.']}]},
+ {n:'4.14',name:'Tintorerías y limpieza textil especializada',f:[
+  {t:'Actividad',k:'act',chips:['Limpieza en seco','Textiles delicados','Uniformes','Cortinas','Tejidos técnicos']},
+  {t:'Interés',k:'why',text:['Especialización y posibilidad de acuerdos con hoteles y empresas.']}]},
+ {n:'4.15',name:'Reciclaje y gestión de residuos',f:[
+  {t:'Actividad',k:'act',chips:['Clasificación','Recuperación de materiales','Cartón','Metales','Plásticos','Residuos industriales']},
+  {t:'Interés',k:'why',text:['La recuperación de materiales puede tener valor comercial.']},
+  {t:'Riesgos',k:'risk',text:['Permisos, trazabilidad, costes de transporte, instalaciones y fluctuación de precios de materiales.']}]},
+ {n:'4.16',name:'Compresores y aire comprimido',f:[
+  {t:'Actividad',k:'act',chips:['Instalación','Reparación','Mantenimiento','Alquiler','Sistemas de distribución de aire']},
+  {t:'Clientes',k:'cli',text:['Talleres, fábricas y empresas industriales.']},
+  {t:'Interés',k:'why',text:['Un fallo puede detener procesos productivos.']}]},
+ {n:'4.17',name:'Calibración y reparación de básculas',f:[
+  {t:'Actividad',k:'act',chips:['Básculas industriales','Sistemas de pesaje','Equipos de medición','Calibración','Verificación metrológica cuando corresponda']},
+  {t:'Interés',k:'why',text:['Especialización, trazabilidad y necesidades de control de los clientes.']},
+  {t:'Riesgos',k:'risk',text:['Acreditaciones y requisitos metrológicos según el servicio.']}]},
+ {n:'4.18',name:'Puertas automáticas e industriales',f:[
+  {t:'Actividad',k:'act',chips:['Puertas de garaje','Puertas automáticas','Muelles de carga','Sistemas de acceso','Mantenimiento']},
+  {t:'Interés',k:'why',text:['Instalación inicial y posteriores intervenciones.']}]},
+ {n:'4.19',name:'Servicios funerarios',f:[
+  {t:'Actividad',k:'act',chips:['Servicios funerarios','Traslados','Tanatorio','Gestión de instalaciones','Servicios complementarios']},
+  {t:'Interés',k:'why',text:['Demanda demográfica y carácter necesario del servicio.']},
+  {t:'Riesgos',k:'risk',text:['Regulación, inversión, concesiones y sensibilidad del negocio.']}]},
+ {n:'4.20',name:'Manipulado y envasado agrícola',f:[
+  {t:'Actividad',k:'act',chips:['Clasificación','Selección','Calibrado','Envasado','Preparación de pedidos','Distribución']},
+  {t:'Clientes',k:'cli',text:['Agricultores, cooperativas y comercializadores.']},
+  {t:'Interés',k:'why',text:['Infraestructura, relaciones agrícolas y actividad productiva consolidada.']},
+  {t:'Riesgos',k:'risk',text:['Estacionalidad, costes laborales, agua, energía y precios agrícolas.']}]}
+];
+const QA=[
+ {n:1,lv:1,q:'¿Qué es un negocio sin relevo generacional?',a:'<p>Es una empresa cuyo propietario se aproxima a la jubilación y no tiene familiares, empleados u otros sucesores dispuestos a continuar con la actividad.</p>'},
+ {n:2,lv:1,q:'¿Por qué los hijos no quieren continuar con estos negocios?',a:'<p>Porque pueden tener otras profesiones, intereses o proyectos personales. También pueden considerar que la actividad exige demasiadas horas, responsabilidad o sacrificio.</p><p>No significa necesariamente que el negocio sea malo.</p>'},
+ {n:3,lv:1,q:'¿Por qué un propietario vendería una empresa rentable?',a:'<p>Porque no desea seguir trabajando, no encuentra sucesores o quiere recuperar el valor económico de lo que ha construido durante décadas.</p>'},
+ {n:4,lv:1,q:'¿Qué significa comprar una empresa en funcionamiento?',a:'<p>Adquirir una actividad que ya dispone de determinados elementos productivos: clientes, proveedores, instalaciones, empleados, maquinaria, procedimientos y reputación.</p><p>Lo que se transmite exactamente depende del tipo de operación.</p>'},
+ {n:5,lv:1,q:'¿Qué es la facturación?',a:'<p>Es el importe de las ventas de bienes y servicios durante un periodo.</p><p>No equivale al dinero que gana el propietario.</p>'},
+ {n:6,lv:1,q:'¿Qué diferencia existe entre facturación y beneficio?',a:'<p>La facturación representa los ingresos por ventas.</p><p>El beneficio resulta después de descontar los gastos correspondientes.</p><p>Una empresa puede facturar mucho y ganar poco o incluso perder dinero.</p>'},
+ {n:7,lv:1,q:'¿Qué es un negocio recurrente?',a:'<p>Es aquel que consigue ingresos repetidos de clientes que necesitan periódicamente sus servicios o productos.</p><p>Ejemplos: mantenimiento frigorífico, lavandería industrial y control de plagas.</p>'},
+ {n:8,lv:1,q:'¿Dónde se pueden encontrar empresas en venta?',a:'<p>En portales especializados, Cámaras de Comercio, intermediarios, asociaciones sectoriales, asesorías y mediante contacto directo con propietarios.</p>'},
+ {n:9,lv:1,q:'¿Es mejor crear una empresa desde cero o comprar una existente?',a:'<p>Depende del capital, el conocimiento, el riesgo y las oportunidades disponibles.</p><p>Comprar una empresa permite adquirir actividad existente, pero también implica asumir sus problemas y obligaciones.</p>'},
+ {n:10,lv:1,q:'¿Qué es una cartera de clientes?',a:'<p>Es el conjunto de clientes que compran o contratan servicios de la empresa.</p><p>Su calidad depende de la recurrencia, rentabilidad, estabilidad y diversificación.</p>'},
+ {n:11,lv:1,q:'¿Qué significa que un negocio sea poco conocido?',a:'<p>Que puede desarrollar una actividad especializada, técnica o industrial que no recibe atención mediática, aunque sea necesaria para otras empresas.</p><p>No significa que carezca de competencia.</p>'},
+ {n:12,lv:2,q:'¿Qué es el EBITDA?',a:'<p>Es un indicador del resultado operativo antes de intereses, impuestos, depreciaciones y amortizaciones.</p><p>Se utiliza para analizar la actividad económica de una empresa, pero no representa directamente el dinero disponible para repartir.</p>'},
+ {n:13,lv:2,q:'¿Qué es la due diligence?',a:'<p>Es una auditoría de adquisición.</p><p>Consiste en investigar a fondo una empresa antes de comprarla para identificar riesgos, obligaciones, activos, contratos, resultados y posibles problemas.</p>'},
+ {n:14,lv:2,q:'¿Qué es un múltiplo de EBITDA?',a:'<p>Es una relación entre el valor de una empresa y su EBITDA.</p><p>Por ejemplo, una empresa con EBITDA normalizado de 100.000 euros y un múltiplo hipotético de 3 tendría un valor de empresa de 300.000 euros antes de los ajustes financieros correspondientes.</p>'},
+ {n:15,lv:2,q:'¿Por qué es peligroso comprar una empresa que depende demasiado del propietario?',a:'<p>Porque parte del valor puede desaparecer cuando el fundador se retire.</p><p>Si los clientes solamente confían en él o si concentra todo el conocimiento, el comprador puede perder ingresos y capacidad operativa.</p>'},
+ {n:16,lv:2,q:'¿Qué es la concentración de clientes?',a:'<p>Es la dependencia de la facturación respecto a un número reducido de clientes.</p><p>Una empresa que depende de uno o dos grandes clientes presenta un riesgo comercial importante.</p>'},
+ {n:17,lv:2,q:'¿Qué es el capital circulante?',a:'<p>Son los recursos financieros necesarios para sostener la actividad diaria.</p><p>Incluye elementos como existencias, cuentas por cobrar y cuentas por pagar.</p><p>Una empresa rentable puede quedarse sin liquidez si cobra tarde y paga pronto.</p>'},
+ {n:18,lv:2,q:'¿Qué diferencia existe entre comprar una sociedad y comprar sus activos?',a:'<p>Comprar participaciones significa adquirir la propiedad de la sociedad, con su historial y sus obligaciones.</p><p>Comprar activos significa adquirir determinados bienes y elementos del negocio.</p><p>Cada modalidad tiene consecuencias jurídicas, fiscales, laborales y económicas diferentes.</p>'},
+ {n:19,lv:2,q:'¿Qué es un earn-out?',a:'<p>Es una parte del precio de compra que se paga posteriormente si se cumplen determinados objetivos pactados.</p><p>Puede depender de ventas, EBITDA, conservación de clientes u otros indicadores.</p>'},
+ {n:20,lv:2,q:'¿Qué importancia tiene el personal de una empresa adquirida?',a:'<p>Puede ser decisiva.</p><p>Los empleados pueden conservar conocimientos técnicos, relaciones comerciales y experiencia que tardarían años en reconstruirse.</p>'},
+ {n:21,lv:2,q:'¿Cómo se puede modernizar una empresa tradicional sin perjudicarla?',a:'<p>Primero hay que comprender sus procesos y descubrir qué funciona.</p><p>Después se introducen mejoras graduales en administración, comercialización, logística, mantenimiento y tecnología.</p><p>La modernización debe resolver problemas reales, no introducir tecnología por moda.</p>'},
+ {n:22,lv:2,q:'¿Puede gestionarse una empresa tradicional a distancia?',a:'<p>Algunas funciones sí: administración, marketing, seguimiento comercial y análisis.</p><p>Pero la actividad física requiere supervisión, personal competente y capacidad de respuesta local.</p><p>La gestión remota no significa ausencia de dirección.</p>'},
+ {n:23,lv:3,q:'¿Cómo se calcula el precio máximo que conviene pagar?',a:'<p>Se parte de los flujos de caja futuros razonablemente esperados, se analizan operaciones comparables y se descuentan riesgos, inversiones necesarias, deuda y necesidades de circulante.</p><p>El precio máximo también debe respetar la capacidad financiera del comprador.</p><p>No debe basarse exclusivamente en lo que pide el vendedor.</p>'},
+ {n:24,lv:3,q:'¿Qué es el EBITDA normalizado?',a:'<p>Es el EBITDA ajustado para representar la capacidad operativa recurrente de la empresa.</p><p>Se revisan gastos extraordinarios, ingresos no recurrentes, gastos personales imputados a la sociedad y costes necesarios que estén infravalorados.</p><p>También debe imputarse un salario razonable para sustituir las funciones del propietario cuando corresponda.</p>'},
+ {n:25,lv:3,q:'¿Qué es la deuda neta?',a:'<p>Generalmente, es la deuda financiera menos la caja disponible, con los ajustes que se acuerden en la operación.</p><p>Es importante porque el valor de empresa y el valor de las participaciones no son necesariamente iguales.</p>'},
+ {n:26,lv:3,q:'¿Cómo se puede financiar una adquisición sin disponer de todo el dinero?',a:'<p>Mediante una combinación negociada de:</p><ul class="ticks blue"><li>Capital propio.</li><li>Financiación bancaria.</li><li>Financiación del vendedor.</li><li>Pagos aplazados.</li><li>Earn-out.</li><li>Incorporación de socios.</li><li>Otras fórmulas de financiación empresarial.</li></ul><p>La viabilidad depende de la capacidad real de generación de caja y de las garantías disponibles.</p>'},
+ {n:27,lv:3,q:'¿Qué es la financiación del vendedor?',a:'<p>Es una estructura en la que el propietario acepta cobrar una parte del precio después de la transmisión.</p><p>Permite repartir el esfuerzo financiero en el tiempo.</p><p>Debe establecerse por escrito con calendario, intereses cuando proceda, garantías y consecuencias del incumplimiento.</p>'},
+ {n:28,lv:3,q:'¿Cómo se protege al comprador frente a deudas ocultas?',a:'<p>Mediante auditoría previa, declaraciones y garantías del vendedor, mecanismos de retención del precio, indemnizaciones, límites de responsabilidad y otras protecciones contractuales.</p><p>La estructura debe diseñarla un abogado especializado.</p><p>Ninguna cláusula sustituye una investigación adecuada.</p>'},
+ {n:29,lv:3,q:'¿Cómo se determina si los contratos con clientes sobrevivirán a la venta?',a:'<p>Hay que revisar las cláusulas de cambio de control, cesión, resolución y duración.</p><p>También debe comprobarse si existe una relación contractual real o simplemente una relación personal con el propietario.</p><p>En determinados casos será necesario obtener consentimiento de los clientes.</p>'},
+ {n:30,lv:3,q:'¿Qué es la sucesión empresarial planificada?',a:'<p>Es un proceso organizado para transferir progresivamente propiedad, dirección, conocimientos y relaciones comerciales.</p><p>Puede durar meses o años.</p><p>La transición no termina con la firma del contrato: termina cuando el nuevo responsable puede gestionar el negocio de manera autónoma.</p>'},
+ {n:31,lv:3,q:'¿Qué es una empresa poco dependiente de su fundador?',a:'<p>Es una empresa en la que las decisiones, los procesos, las relaciones comerciales y el conocimiento están suficientemente distribuidos.</p><p>Existen responsables, procedimientos documentados y mecanismos de control.</p><p>Es una característica especialmente valiosa para un comprador.</p>'},
+ {n:32,lv:3,q:'¿Cómo se puede utilizar IA para aumentar la rentabilidad de una empresa adquirida?',a:'<p>Primero se identifican tareas repetitivas, pérdidas de tiempo, errores y oportunidades comerciales.</p><p>Después se implementan soluciones concretas:</p><ul class="ticks violet"><li>CRM inteligente.</li><li>Atención comercial automatizada.</li><li>Predicción de mantenimiento.</li><li>Control de inventario.</li><li>Análisis de rentabilidad por cliente.</li><li>Optimización de rutas.</li><li>Gestión documental.</li><li>Informes de dirección.</li></ul><p>La IA debe producir mejoras medibles en costes, productividad o ventas.</p>'},
+ {n:33,lv:3,q:'¿Cuál es la diferencia entre comprar un negocio y comprar una empresa que funciona sin su propietario?',a:'<p>Comprar un negocio puede significar adquirir una actividad que todavía depende completamente de quien la fundó.</p><p>Comprar una empresa que funciona sin su propietario significa adquirir una organización con procesos, personal, clientes, responsabilidades y dirección suficientemente estructurados.</p><p>La segunda suele ser mucho más interesante para quien pretende construir una cartera de negocios o gestionarlos sin estar presente en todas las operaciones.</p>'}
+];
+const CRITERIA=[
+ {label:'Rentabilidad demostrable',max:20,seed:16,c:'#4FE3F7'},
+ {label:'Recurrencia de clientes',max:15,seed:12,c:'#4C8DFF'},
+ {label:'Diversificación de clientes',max:10,seed:7,c:'#B57BFF'},
+ {label:'Independencia del propietario',max:10,seed:6,c:'#E879F9'},
+ {label:'Estado de maquinaria e instalaciones',max:10,seed:7,c:'#4ADE80'},
+ {label:'Posibilidad de automatización',max:10,seed:8,c:'#FFC24B'},
+ {label:'Calidad del equipo humano',max:10,seed:8,c:'#FF5C7A'},
+ {label:'Precio y condiciones de adquisición',max:10,seed:6,c:'#2BB8C9'},
+ {label:'Facilidad de gestión',max:5,seed:4,c:'#8FA6FF'}
+];
+
+/* ═══════════ UTILIDADES ═══════════ */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const fmtEUR=n=>new Intl.NumberFormat('es-ES',{maximumFractionDigits:0}).format(n)+' €';
+const fmtNum=(n,d)=>new Intl.NumberFormat('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const panels=TABS.map(t=>document.getElementById('p-'+t.id));
+let active=0;
+
+/* ═══════════ ENLACES ═══════════ */
+function linkCard(key){
+ const L=LINKS[key], host=L.url.replace(/^https?:\/\//,'').split('/')[0];
+ return `<div class="linkcard ${L.kind}"><div class="lic">${ICONS[L.kind]}</div>
+  <div class="ltx"><b>${L.title}</b><div class="lmeta">${L.meta}</div><div class="lurl" title="${L.url}">${host} · ${L.url}</div></div>
+  <button class="btn-open" data-open="${L.url}" aria-label="Abrir ${L.title} en otra ventana">Abrir en otra ventana ${ICONS.ext}</button></div>`;
+}
+$$('.link-slot').forEach(slot=>{slot.outerHTML=linkCard(slot.dataset.link);});
+$('#srcStudies').innerHTML=['pyme2026','ciae','cincodias','eldiario','mitess'].map((k,i)=>`<div class="rv"><div class="fieldlab fl-cli" style="margin-top:14px">Fuente ${i+1}</div>${linkCard(k)}</div>`).join('');
+$('#srcPlatforms').innerHTML=['tupyme','compramos','bfs','traspaso'].map(k=>`<div class="rv">${linkCard(k)}</div>`).join('');
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-open]');
+ if(b)window.open(b.dataset.open,'_blank','noopener,noreferrer');
+ const g=e.target.closest('[data-goto]');
+ if(g)activate(parseInt(g.dataset.goto,10));
+});
+
+/* ═══════════ MARQUEE ═══════════ */
+(function(){
+ const items=SECTORS.map(s=>s.name).join(' <b>✦</b> ')+' <b>✦</b> ';
+ $('#mtrack').innerHTML=`<span>${items}</span><span aria-hidden="true">${items}</span>`;
+})();
+
+/* ═══════════ SECTORES ═══════════ */
+const KCLS={act:'fl-act',cli:'fl-cli',why:'fl-why',risk:'fl-risk',mod:'fl-mod'};
+const KCHIP={act:'c-cyan',cli:'c-blue',why:'c-green',risk:'c-red',mod:'c-violet'};
+function fieldHTML(f){
+ let body='';
+ if(f.chips)body=`<div class="chips">${f.chips.map(c=>`<span class="chip ${KCHIP[f.k]}">${c}</span>`).join('')}</div>`;
+ else if(f.list)body=`<ul class="ticks ${f.k==='risk'?'red':f.k==='why'?'green':''}">${f.list.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+ else body=f.text.map(t=>`<p>${t}</p>`).join('');
+ return `<div class="fieldlab ${KCLS[f.k]}">${f.t}</div>${body}`;
+}
+$('#secList').innerHTML=SECTORS.map(s=>{
+ const search=norm(s.name+' '+s.f.map(f=>(f.chips||f.list||f.text||[]).join(' ')).join(' '));
+ return `<details class="acc sec rv" data-search="${search}">
+  <summary><span class="anum">${s.n}</span><span class="atitle">${s.name}</span>${ICONS.chev}</summary>
+  <div class="accbody">${s.f.map(fieldHTML).join('')}</div></details>`;
+}).join('');
+const secEls=$$('#secList details');
+$('#secSearch').addEventListener('input',e=>{
+ const q=norm(e.target.value.trim());let vis=0;
+ secEls.forEach(d=>{const ok=!q||d.dataset.search.includes(q);d.hidden=!ok;if(ok)vis++;});
+ $('#secCount').innerHTML=`Mostrando <b>${vis}</b> de 20 sectores`;
+});
+$('#secExpand').addEventListener('click',()=>secEls.forEach(d=>{if(!d.hidden)d.open=true;}));
+$('#secCollapse').addEventListener('click',()=>secEls.forEach(d=>d.open=false));
+
+/* ═══════════ Q&A ═══════════ */
+(function(){
+ let html='',lastLv=0;
+ const LVN={1:'Nivel 1 — Principiante',2:'Nivel 2 — Intermedio',3:'Nivel 3 — Avanzado'};
+ QA.forEach(item=>{
+  if(item.lv!==lastLv){html+=`<div class="qlevel rv"><span class="lv lv${item.lv}">${LVN[item.lv]}</span><span class="ll"></span></div>`;lastLv=item.lv;}
+  html+=`<details class="acc qa qa${item.lv} rv"><summary><span class="anum">${String(item.n).padStart(2,'0')}</span><span class="atitle">${item.q}</span>${ICONS.chev}</summary><div class="accbody qa-a">${item.a}</div></details>`;
+ });
+ $('#qaList').innerHTML=html;
+})();
+$('#qaExpand').addEventListener('click',()=>$$('#qaList details').forEach(d=>d.open=true));
+$('#qaCollapse').addEventListener('click',()=>$$('#qaList details').forEach(d=>d.open=false));
+
+/* ═══════════ SCORECARD ═══════════ */
+(function(){
+ const rows=$('#scoreRows'),bar=$('#stackbar');
+ rows.innerHTML=CRITERIA.map((c,i)=>`<div class="crow"><div class="cl"><label for="sc${i}">${c.label}</label><output id="sco${i}">${c.seed} / ${c.max}</output></div>
+  <input type="range" id="sc${i}" min="0" max="${c.max}" step="1" value="${c.seed}" data-i="${i}"></div>`).join('');
+ bar.innerHTML=CRITERIA.map((c,i)=>`<i id="sb${i}" style="background:${c.c};width:${c.seed}%"></i>`).join('');
+ function update(){
+  let total=0;
+  CRITERIA.forEach((c,i)=>{
+   const v=parseInt(document.getElementById('sc'+i).value,10);total+=v;
+   document.getElementById('sco'+i).textContent=`${v} / ${c.max}`;
+   document.getElementById('sb'+i).style.width=v+'%';
+  });
+  $('#scoreTotal').textContent=total;
+  const vd=$('#scoreVerdict');
+  if(total>=85){vd.className='verdict v-green';vd.textContent='Muy interesante para auditoría';}
+  else if(total>=70){vd.className='verdict v-amber';vd.textContent='Merece negociación e investigación';}
+  else if(total>=55){vd.className='verdict v-blue';vd.textContent='Necesita mejoras o condiciones';}
+  else{vd.className='verdict v-red';vd.textContent='Descartar provisionalmente';}
+ }
+ rows.addEventListener('input',update);
+ $('#scoreReset').addEventListener('click',()=>{CRITERIA.forEach((c,i)=>document.getElementById('sc'+i).value=c.seed);update();});
+ $('#scoreZero').addEventListener('click',()=>{CRITERIA.forEach((c,i)=>document.getElementById('sc'+i).value=0);update();});
+ update();
+})();
+
+/* ═══════════ SIMULADOR ═══════════ */
+(function(){
+ const E=$('#vEbitda'),M=$('#vMult'),D=$('#vDeuda'),C=$('#vCaja');
+ function upd(){
+  const e=+E.value,m=+M.value,d=+D.value,c=+C.value,ev=e*m,eq=ev-d+c;
+  $('#oEbitda').textContent=fmtEUR(e);
+  $('#oMult').textContent='× '+fmtNum(m,m%1?1:0);
+  $('#oDeuda').textContent=fmtEUR(d);
+  $('#oCaja').textContent=fmtEUR(c);
+  $('#vEV').textContent=fmtEUR(ev);
+  const eqEl=$('#vEQ');eqEl.textContent=fmtEUR(eq);eqEl.classList.toggle('neg',eq<0);
+ }
+ [E,M,D,C].forEach(el=>el.addEventListener('input',upd));
+ $('#vReset').addEventListener('click',()=>{E.value=100000;M.value=3;D.value=60000;C.value=20000;upd();});
+ upd();
+})();
+
+/* ═══════════ NAVEGACIÓN ═══════════ */
+const strip=$('#tabstrip'),drawer=$('#drawer'),scrim=$('#scrim');
+strip.innerHTML=TABS.map((t,i)=>`<button class="tabchip" role="tab" id="tab-${t.id}" aria-controls="p-${t.id}" aria-selected="${i===0}" data-i="${i}"><em>${String(i+1).padStart(2,'0')}</em>${t.name}</button>`).join('');
+const chips=$$('.tabchip');
+$('#drawerList').innerHTML=TABS.map((t,i)=>`<button class="ditem" data-i="${i}"><span class="dnum">${String(i+1).padStart(2,'0')}</span><span><span class="dname">${t.name}</span><span class="ddesc">${t.desc}</span></span></button>`).join('');
+const ditems=$$('.ditem');
+panels.forEach((p,i)=>{
+ const prev=i>0?TABS[i-1]:null,next=i<TABS.length-1?TABS[i+1]:TABS[0];
+ const cap=document.createElement('div');cap.className='endcap rv';
+ cap.innerHTML=`<div class="ecmeta">— Fin de la sección ${String(i+1).padStart(2,'0')} de ${TABS.length} —</div>
+  <div class="ecbtns ${prev?'':'solo'}">
+   ${prev?`<button class="ecbtn" data-goto="${i-1}"><small>← Anterior</small><b>${prev.name}</b></button>`:''}
+   <button class="ecbtn next" data-goto="${i<TABS.length-1?i+1:0}"><small>${i<TABS.length-1?'Siguiente →':'⌂ Volver'}</small><b>${next.name}</b></button>
+  </div>`;
+ p.appendChild(cap);
+});
+function centerChip(i,smooth){
+ const chip=chips[i];
+ strip.scrollTo({left:chip.offsetLeft-(strip.clientWidth-chip.offsetWidth)/2,behavior:smooth&&!reduceMotion?'smooth':'auto'});
+}
+function activate(i,opts){
+ opts=opts||{};
+ i=Math.max(0,Math.min(TABS.length-1,i));
+ active=i;
+ panels.forEach((p,j)=>{p.hidden=j!==i;});
+ chips.forEach((c,j)=>{c.setAttribute('aria-selected',j===i?'true':'false');c.tabIndex=j===i?0:-1;});
+ ditems.forEach((d,j)=>d.classList.toggle('act',j===i));
+ centerChip(i,opts.smooth!==false);
+ window.scrollTo(0,0);
+ $('#pcount').innerHTML=`${String(i+1).padStart(2,'0')}/${TABS.length}<small>SECCIÓN</small>`;
+ const prev=$('#pPrev');
+ if(i>0){prev.classList.remove('off');prev.removeAttribute('aria-disabled');$('#pPrevName').textContent=TABS[i-1].name;}
+ else{prev.classList.add('off');prev.setAttribute('aria-disabled','true');$('#pPrevName').textContent='—';}
+ if(i<TABS.length-1){$('#pNextLab').textContent='Siguiente →';$('#pNextName').textContent=TABS[i+1].name;}
+ else{$('#pNextLab').textContent='⌂ Volver';$('#pNextName').textContent='Inicio';}
+ document.title=TABS[i].name+' · IA Tutoriales · Riqueza en Silencio';
+ if(!opts.fromHash){try{history.replaceState(null,'','#'+TABS[i].id);}catch(err){}}
+ updateProgress();
+ closeDrawer();
+ requestAnimationFrame(revealScan);
+}
+strip.addEventListener('click',e=>{const c=e.target.closest('.tabchip');if(c)activate(+c.dataset.i);});
+strip.addEventListener('keydown',e=>{
+ let d=0;
+ if(e.key==='ArrowRight')d=1;else if(e.key==='ArrowLeft')d=-1;
+ else if(e.key==='Home'){e.preventDefault();activate(0);chips[0].focus();return;}
+ else if(e.key==='End'){e.preventDefault();activate(TABS.length-1);chips[TABS.length-1].focus();return;}
+ if(d){e.preventDefault();const n=Math.max(0,Math.min(TABS.length-1,active+d));activate(n);chips[n].focus();}
+});
+$('#drawerList').addEventListener('click',e=>{const d=e.target.closest('.ditem');if(d)activate(+d.dataset.i);});
+$('#pPrev').addEventListener('click',()=>{if(active>0)activate(active-1);});
+$('#pNext').addEventListener('click',()=>activate(active<TABS.length-1?active+1:0));
+function openDrawer(){drawer.classList.add('on');scrim.classList.add('on');document.body.classList.add('lock');$('#btnIndex').setAttribute('aria-expanded','true');const a=ditems[active];if(a)a.focus();}
+function closeDrawer(){if(!drawer.classList.contains('on'))return;drawer.classList.remove('on');scrim.classList.remove('on');document.body.classList.remove('lock');$('#btnIndex').setAttribute('aria-expanded','false');}
+$('#btnIndex').addEventListener('click',openDrawer);
+$('#heroIndex').addEventListener('click',openDrawer);
+$('#btnCloseDrawer').addEventListener('click',()=>{closeDrawer();$('#btnIndex').focus();});
+scrim.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+window.addEventListener('hashchange',()=>{
+ const i=TABS.findIndex(t=>t.id===location.hash.replace('#',''));
+ if(i>=0&&i!==active)activate(i,{fromHash:true});
+});
+
+/* ═══════════ PROGRESO ═══════════ */
+let progTick=false;
+function updateProgress(){
+ const max=document.documentElement.scrollHeight-window.innerHeight;
+ $('#progress').style.width=(max>4?Math.min(100,Math.max(0,window.scrollY/max*100)):100)+'%';
+}
+window.addEventListener('scroll',()=>{
+ if(!progTick){progTick=true;requestAnimationFrame(()=>{updateProgress();progTick=false;});}
+},{passive:true});
+
+/* ═══════════ REVEALS + CONTADORES ═══════════ */
+const io=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{threshold:.06,rootMargin:'0px 0px -4% 0px'});
+function revealScan(){$$('.rv:not(.in)').forEach(el=>io.observe(el));}
+const cio=new IntersectionObserver(en=>{
+ en.forEach(x=>{
+  if(!x.isIntersecting)return;cio.unobserve(x.target);
+  const el=x.target,target=parseFloat(el.dataset.val),dec=parseInt(el.dataset.dec,10)||0;
+  if(reduceMotion){el.textContent=fmtNum(target,dec);return;}
+  const t0=performance.now(),dur=950;
+  (function step(now){
+   const p=Math.min(1,(now-t0)/dur),ease=1-Math.pow(1-p,3);
+   el.textContent=fmtNum(target*ease,dec);
+   if(p<1)requestAnimationFrame(step);
+  })(t0);
+ });
+},{threshold:.4});
+$$('.count').forEach(el=>cio.observe(el));
+
+/* ═══════════ FABs ARRASTRABLES ═══════════ */
+const FAB_SIZE=56,FAB_PAD=8;
+const fabHome=$('#fabHome'),fabTop=$('#fabTop');
+function fabBounds(){
+ const hh=$('#topbar').offsetHeight;
+ return{minX:FAB_PAD,maxX:window.innerWidth-FAB_SIZE-FAB_PAD,minY:hh+FAB_PAD,maxY:window.innerHeight-FAB_SIZE-FAB_PAD};
+}
+function loadFabPos(){try{return JSON.parse(localStorage.getItem('iat_fabs_v2'))||{};}catch(err){return{};}}
+function saveFabPos(){try{localStorage.setItem('iat_fabs_v2',JSON.stringify({home:{x:fabHome._x,y:fabHome._y},top:{x:fabTop._x,y:fabTop._y}}));}catch(err){}}
+function setFab(el,x,y){
+ const b=fabBounds();
+ el._x=Math.max(b.minX,Math.min(b.maxX,x));
+ el._y=Math.max(b.minY,Math.min(b.maxY,y));
+ el.style.transform=`translate3d(${el._x}px,${el._y}px,0)`;
+}
+function initFab(el,defX,defY,action){
+ const saved=loadFabPos()[el.id==='fabHome'?'home':'top'];
+ el.classList.add('snap');
+ setFab(el,saved?saved.x:defX,saved?saved.y:defY);
+ let sx=0,sy=0,ox=0,oy=0,moved=false,pid=null;
+ el.addEventListener('pointerdown',e=>{
+  pid=e.pointerId;try{el.setPointerCapture(pid);}catch(err){}
+  sx=e.clientX;sy=e.clientY;ox=el._x;oy=el._y;moved=false;
+  el.classList.remove('snap');el.classList.add('drag');e.preventDefault();
+ });
+ el.addEventListener('pointermove',e=>{
+  if(pid===null||e.pointerId!==pid)return;
+  const dx=e.clientX-sx,dy=e.clientY-sy;
+  if(Math.abs(dx)>6||Math.abs(dy)>6)moved=true;
+  if(moved)setFab(el,ox+dx,oy+dy);
+ });
+ function end(e){
+  if(pid===null||e.pointerId!==pid)return;
+  try{el.releasePointerCapture(pid);}catch(err){}
+  pid=null;el.classList.remove('drag');el.classList.add('snap');
+  if(!moved&&e.type==='pointerup'){
+   el.classList.add('pulse');setTimeout(()=>el.classList.remove('pulse'),460);
+   action();
+  }else{
+   const b=fabBounds(),mid=(b.minX+b.maxX)/2;
+   setFab(el,el._x<mid?b.minX:b.maxX,el._y);saveFabPos();
+  }
+ }
+ el.addEventListener('pointerup',end);
+ el.addEventListener('pointercancel',end);
+ el.addEventListener('click',e=>{if(e.detail===0)action();});
+}
+function fabDefaults(){
+ const b=fabBounds(),ph=$('#pager').offsetHeight;
+ return{x:b.maxX,y1:Math.max(b.minY,b.maxY-ph-78),y2:Math.max(b.minY,b.maxY-ph-146)};
+}
+const fd=fabDefaults();
+initFab(fabHome,fd.x,fd.y1,()=>activate(0));
+initFab(fabTop,fd.x,fd.y2,()=>window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'}));
+
+/* ═══════════ ARRANQUE ═══════════ */
+function measure(){
+ document.documentElement.style.setProperty('--headerH',$('#topbar').offsetHeight+'px');
+ document.documentElement.style.setProperty('--pagerH',$('#pager').offsetHeight+'px');
+ setFab(fabHome,fabHome._x,fabHome._y);
+ setFab(fabTop,fabTop._x,fabTop._y);
+}
+window.addEventListener('resize',()=>{measure();centerChip(active,false);updateProgress();});
+measure();
+activate(Math.max(0,TABS.findIndex(t=>t.id===location.hash.replace('#',''))),{smooth:false,fromHash:true});
+revealScan();
+window.addEventListener('load',()=>{measure();centerChip(active,false);updateProgress();revealScan();});
+</script>
+</body>
+</html>
